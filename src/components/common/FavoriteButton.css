@@ -1,21 +1,36 @@
 .favorite-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
     background: transparent;
     border: none;
     cursor: pointer;
     padding: 8px;
-    transition: all 0.3s;
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.favorite-button:hover {
+    transform: scale(1.1);
 }
 
 .heart-icon {
-    font-size: 18px;
+    font-size: 24px;
     color: #e74c3c;
 }
 
 .heart-icon.filled {
     color: #e74c3c;
+}
+
+.favorite-button.save-btn {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background-color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .favorite-button.card-favorite {
@@ -26,30 +41,5 @@
     border-radius: 50%;
     width: 36px;
     height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     z-index: 10;
-}
-
-.favorite-button.card-favorite:hover {
-    background-color: rgba(255, 255, 255, 1);
-    transform: scale(1.1);
-}
-
-.favorite-button.details-favorite {
-    background-color: #e74c3c;
-    color: white;
-    border-radius: 6px;
-    padding: 10px 20px;
-    font-weight: 600;
-}
-
-.favorite-button.details-favorite .heart-icon,
-.favorite-button.details-favorite .heart-icon.filled {
-    color: white;
-}
-
-.favorite-button.details-favorite:hover {
-    background-color: #c0392b;
 }

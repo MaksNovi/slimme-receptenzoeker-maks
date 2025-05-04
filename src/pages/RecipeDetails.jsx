@@ -70,12 +70,13 @@ function RecipeDetails() {
 
                 <div className="recipe-sidecard">
                     <div className="button-container">
-                        <button ><FavoriteButton
-                            recipe={recipe}
-                            className="save-btn"
-                            showText={true}
-                        /></button>
-
+                        <div className="save-button-wrapper">
+                            <FavoriteButton
+                                recipe={recipe}
+                                className="save-btn"
+                                showText={true}
+                            />
+                        </div>
                         <button className="back-btn" onClick={() => navigate(-1)}>Back to Search</button>
                     </div>
 

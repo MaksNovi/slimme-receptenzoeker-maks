@@ -46,15 +46,9 @@ function FavoriteButton({ recipe, className, showText = false }) {
             aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
         >
             {isFavorite ? (
-                <>
-                    <FaHeart className="heart-icon filled" />
-                    {showText && <span>SAVED</span>}
-                </>
+                <FaHeart className="heart-icon filled" />
             ) : (
-                <>
-                    <FaRegHeart className="heart-icon" />
-                    {showText && <span>SAVE RECIPE</span>}
-                </>
+                <FaRegHeart className="heart-icon" />
             )}
         </button>
     );
