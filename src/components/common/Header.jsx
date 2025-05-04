@@ -16,7 +16,7 @@ function Header() {
                     <ul>
                         <li><Link to="/">Home</Link></li>
                         <li><Link to="/search-results">Search Results</Link></li>
-                        <li><Link to="/recipe/details">Recipe Details</Link></li>
+                        <li><Link to="/recipe/details">Popular Recipes</Link></li>
                         <li><Link to="/recipe/details">Favourite Recipes</Link></li>
                     </ul>
                 </nav>
