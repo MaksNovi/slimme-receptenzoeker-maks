@@ -17,7 +17,7 @@ function Home() {
                 </p>
 
                 <div className="features-section">
-                    <Link to="/search" className="feature-card">
+                    <Link to="/search-results" className="feature-card">
                         <div className="feature-image-container">
                             <img src={mealImage1} alt="Search by ingredients" className="feature-image" />
                         </div>
@@ -25,7 +25,7 @@ function Home() {
                         <p>Find recipes using what you already have in your pantry</p>
                     </Link>
 
-                    <Link to="/popular" className="feature-card">
+                    <Link to="/popular-recipes" className="feature-card">
                         <div className="feature-image-container">
                             <img src={mealImage2} alt="Popular recipes" className="feature-image" />
                         </div>

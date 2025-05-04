@@ -6,6 +6,7 @@ import Footer from "./components/common/Footer.jsx";
 import SearchRecipes from "./pages/SearchRecipes.jsx";
 import RecipeDetails from "./pages/RecipeDetails.jsx";
 import PopularRecipes from "./pages/PopularRecipes.jsx";
+import Login from "./pages/Login.jsx";
 import './App.css'
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
                       <Route path="/search-results" element={<SearchRecipes />} />
                       <Route path="/recipe/:id" element={<RecipeDetails />} />
                       <Route path="/popular-recipes" element={<PopularRecipes />} />
+                      <Route path="/login" element={<Login />} />
                   </Routes>
               </main>
               <Footer/>
