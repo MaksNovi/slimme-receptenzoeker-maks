@@ -1,0 +1,43 @@
+.search-recipes-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.search-container {
+    margin-bottom: 30px;
+}
+
+.search-description {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.search-form {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+    font-size: 16px;
+}
+
+.search-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    padding: 0 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.results-container {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}

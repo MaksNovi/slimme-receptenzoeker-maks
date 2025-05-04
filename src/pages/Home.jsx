@@ -43,7 +43,7 @@ function Home() {
                 </div>
 
                 <div className="cta-section">
-                    <Link to="/search" className="cta-button">Start Searching Recipes</Link>
+                    <Link to="/search-results" className="cta-button">Start Searching Recipes</Link>
                     <Link to="/register" className="cta-button secondary">Create an Account</Link>
                 </div>
             </div>
