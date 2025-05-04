@@ -85,6 +85,44 @@ function RecipeDetails() {
                         <span dangerouslySetInnerHTML={{ __html: recipe.summary.split('. ')[0] + '.' }} />
                     )}
                 </p>
+
+                <div className="recipe-sections">
+                    <div className="ingredients-section">
+                        <h2>Ingredients</h2>
+                        <ul className="ingredients-list">
+                            {recipe.extendedIngredients && recipe.extendedIngredients.map(ingredient => (
+                                <li key={ingredient.id} className="ingredient-item">
+                                    <span className="ingredient-amount">
+                                        {ingredient.amount} {ingredient.unit}
+                                    </span>
+
+                                    <span className="ingredient-name">{ingredient.name}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div className="instructions-section">
+                        <h2>Instructions</h2>
+                        {recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0 ? (
+                            <ol className="instructions-list">
+                                {recipe.analyzedInstructions[0].steps.map(step => (
+                                    <li key={step.number} className="instruction-step">
+                                        {step.step}
+                                    </li>
+                                ))}
+                            </ol>
+                        ) : (
+                            <p className="no-instructions">
+                                {recipe.instructions ? (
+                                    <span dangerouslySetInnerHTML={{ __html: recipe.instructions }} />
+                                ) : (
+                                    "No instructions available"
+                                )}
+                            </p>
+                        )}
+                    </div>
+                </div>
             </div>
         </div>
     );
