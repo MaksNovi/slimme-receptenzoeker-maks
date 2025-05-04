@@ -3,7 +3,6 @@ import './SearchRecipes.css';
 import SearchBar from "../components/common/SearchBar.jsx";
 
 function SearchRecipes() {
-    const [ingredients, setIngredients] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
