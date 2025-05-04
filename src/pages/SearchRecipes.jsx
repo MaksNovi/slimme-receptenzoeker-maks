@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import './SearchRecipes.css';
+import SearchBar from "../components/common/SearchBar.jsx";
 
 function SearchRecipes() {
-    // Basis state voor ingrediënten en zoekresultaten
     const [ingredients, setIngredients] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +15,6 @@ function SearchRecipes() {
         setError(null);
 
         try {
-            // Gebruik je eigen API key hier
             const apiKey = 'fe3dc1f83f014d92bd65f14f401ce259';
             const url = `https://api.spoonacular.com/recipes/findByIngredients?apiKey=${apiKey}&ingredients=${ingredientsList}&number=12&ranking=1&ignorePantry=true`;
 
@@ -30,10 +29,9 @@ function SearchRecipes() {
         }
     };
 
-    // Handler voor het formulier
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if(ingredients.trim()) searchRecipes(ingredients);
+    const handleSearch = (ingredientsList) => {
+        setIngredients(ingredientsList);
+        searchRecipes(ingredientsList);
     };
 
     return (
@@ -44,16 +42,7 @@ function SearchRecipes() {
                     Enter the ingredients you have at home, separated by commas, and find recipes you can make with them.
                 </p>
 
-                <form onSubmit={handleSubmit} className="search-form">
-                    <input
-                        type="text"
-                        value={ingredients}
-                        onChange={(e) => setIngredients(e.target.value)}
-                        placeholder="Example, chicken, rice, broccoli"
-                        className="search-input"
-                    />
-                    <button type="submit" className="search-button">Search</button>
-                </form>
+                <SearchBar onSearch={handleSearch} />
             </div>
 
             <div className="results-container">
