@@ -5,6 +5,7 @@ import Home from './pages/Home.jsx';
 import Footer from "./components/common/Footer.jsx";
 import SearchRecipes from "./pages/SearchRecipes.jsx";
 import RecipeDetails from "./pages/RecipeDetails.jsx";
+import PopularRecipes from "./pages/PopularRecipes.jsx";
 import './App.css'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
                       <Route path="/" element={<Home />} />
                       <Route path="/search-results" element={<SearchRecipes />} />
                       <Route path="/recipe/:id" element={<RecipeDetails />} />
+                      <Route path="/popular-recipes" element={<PopularRecipes />} />
                   </Routes>
               </main>
               <Footer/>

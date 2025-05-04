@@ -36,3 +36,23 @@ export const getRecipeDetails = async (recipeId) => {
         throw error;
     }
 };
+
+export const getPopularRecipes = async (options = {}) => {
+    try {
+        const { number = 12, tags = '' } = options;
+
+        const url = `${BASE_URL}/recipes/random?apiKey=${API_KEY}&number=${number}&tags=${tags}`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`API responded with status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.recipes;
+    } catch (error) {
+        console.error('Error fetching popular recipes:', error);
+        throw error;
+    }
+};
