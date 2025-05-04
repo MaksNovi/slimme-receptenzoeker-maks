@@ -1,98 +1,167 @@
 .recipe-details-page {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    max-width: 1100px;
+    margin: 40px auto 0 auto;
+    padding: 0 16px;
 }
 
-.recipe-details-header {
-    margin-bottom: 20px;
-}
-
-.back-button {
-    background-color: transparent;
-    border: 1px solid #ddd;
-    color: #666;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.loading-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 400px;
-}
-
-.loading-spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-radius: 50%;
-    border-top: 4px solid #e74c3c;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 15px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.error-container {
-    text-align: center;
-    padding: 40px;
-    color: #e74c3c;
-}
-
-.recipe-sections {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-.ingredients-section,
-.instructions-section {
-    margin-bottom: 30px;
-}
-
-.ingredients-section h2,
-.instructions-section h2 {
-    font-size: 22px;
+.recipe-title {
+    font-size: 24px;
     color: #333;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+    margin: 0;
 }
 
-.ingredients-list {
+.recipe-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.recipe-details-flex {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+}
+
+.recipe-image {
+    width: 100%;
+    max-width: 480px;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin-bottom: 24px;
+}
+
+.recipe-description {
+    margin-top: 20px;
+    max-width: 100%;
+}
+
+.recipe-summary {
+    color: #444;
+    font-size: 15px;
+    line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.recipe-sidecard {
+    flex: 0 0 520px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    position: sticky;
+    top: 20px;
+}
+
+
+.button-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.save-button-wrapper {
+    display: inline-block;
+}
+
+.save-btn {
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.save-btn:hover {
+    background: #c0392b;
+}
+
+.sidecard-section-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 18px 0 8px 0;
+    color: #333;
+}
+
+.ingredient-list {
     list-style: none;
     padding: 0;
+    margin: 0 0 18px 0;
+    color: #222;
+    font-size: 15px;
 }
 
-.ingredient-item {
-    display: flex;
-    padding: 8px 0;
-    border-bottom: 1px dashed #eee;
-}
-
-.ingredient-amount {
-    min-width: 100px;
-    color: #e74c3c;
-    font-weight: 500;
-}
-
-.ingredient-name {
-    color: #333;
+.ingredient-list li {
+    margin-bottom: 4px;
 }
 
 .instructions-list {
-    padding-left: 20px;
+    margin: 0 0 18px 0;
+    padding: 0;
+    color: #222;
+    font-size: 15px;
 }
 
-.instruction-step {
-    margin-bottom: 15px;
-    line-height: 1.6;
+.instructions-list li {
+    margin-bottom: 6px;
+}
+
+.recipe-meta-row {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.recipe-meta {
+    color: #e74c3c;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.back-btn {
+    background: #eee;
     color: #333;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.back-btn:hover {
+    background: #ccc;
+}
+
+@media (max-width: 900px) {
+    .recipe-details-flex {
+        flex-direction: column;
+    }
+
+    .recipe-sidecard {
+        flex: none;
+        width: 100%;
+    }
+
+    .recipe-image {
+        height: 220px;
+        width: 100%;
+    }
 }

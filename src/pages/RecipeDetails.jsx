@@ -1,10 +1,11 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import './RecipeDetails.css';
 import {useEffect, useState} from "react";
 import {getRecipeDetails} from "../services/SpoonacularService.js";
+import FavoriteButton from "../components/common/FavoriteButton.jsx";
 
 function RecipeDetails() {
-    const { id } = useParams();
+    const {id} = useParams();
     const navigate = useNavigate();
     const [recipe, setRecipe] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -54,73 +55,64 @@ function RecipeDetails() {
 
     return (
         <div className="recipe-details-page">
-            <div className="recipe-details-header">
-                <button onClick={() => navigate(-1)} className="back-button">
-                    Back to search results
-                </button>
-
-                <button className="save-recipe-button">
-                    Save recipe
-                </button>
-            </div>
-
-            <div className="recipe-main">
-                <div className="recipe-image-container">
-                    <img src={recipe.image} alt={recipe.title} className="recipe-image" />
-                </div>
-
-                <h1 className="recipe-title">{recipe.title}</h1>
-
-                <div className="recipe-meta">
-                    <div className="recipe-meta-item">
-                        <span>Prep time: {recipe.readyInMinutes} minutes</span>
-                    </div>
-                    <div className="recipe-meta-item">
-                        <span>Rating: {recipe.spoonacularScore ? (recipe.spoonacularScore / 20).toFixed(1) : '4.5'}</span>
+            <div className="recipe-details-flex">
+                <div className="recipe-content">
+                    <img className="recipe-image" src={recipe.image} alt={recipe.title}/>
+                    <div className="recipe-description">
+                        <h2 className="recipe-title">{recipe.title}</h2>
+                        <p className="recipe-summary">
+                            {recipe.summary && (
+                                <span dangerouslySetInnerHTML={{__html: recipe.summary}}/>
+                            )}
+                        </p>
                     </div>
                 </div>
 
-                <p className="recipe-description">
-                    {recipe.summary && (
-                        <span dangerouslySetInnerHTML={{ __html: recipe.summary.split('. ')[0] + '.' }} />
-                    )}
-                </p>
+                <div className="recipe-sidecard">
+                    <div className="button-container">
+                        <button ><FavoriteButton
+                            recipe={recipe}
+                            className="save-btn"
+                            showText={true}
+                        /></button>
 
-                <div className="recipe-sections">
-                    <div className="ingredients-section">
-                        <h2>Ingredients</h2>
-                        <ul className="ingredients-list">
-                            {recipe.extendedIngredients && recipe.extendedIngredients.map(ingredient => (
-                                <li key={ingredient.id} className="ingredient-item">
-                                    <span className="ingredient-amount">
-                                        {ingredient.amount} {ingredient.unit}
-                                    </span>
+                        <button className="back-btn" onClick={() => navigate(-1)}>Back to Search</button>
+                    </div>
 
-                                    <span className="ingredient-name">{ingredient.name}</span>
-                                </li>
+                    <div>
+                        <div className="sidecard-section-title">Ingredients</div>
+                        <ul className="ingredient-list">
+                            {recipe.extendedIngredients.map(ing => (
+                                <li key={ing.id}>{ing.original}</li>
                             ))}
                         </ul>
                     </div>
 
-                    <div className="instructions-section">
-                        <h2>Instructions</h2>
-                        {recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0 ? (
-                            <ol className="instructions-list">
-                                {recipe.analyzedInstructions[0].steps.map(step => (
-                                    <li key={step.number} className="instruction-step">
-                                        {step.step}
-                                    </li>
-                                ))}
-                            </ol>
-                        ) : (
-                            <p className="no-instructions">
-                                {recipe.instructions ? (
-                                    <span dangerouslySetInnerHTML={{ __html: recipe.instructions }} />
-                                ) : (
-                                    "No instructions available"
-                                )}
-                            </p>
-                        )}
+                    <div>
+                        <div className="sidecard-section-title">Instructions</div>
+                        <ul className="instructions-list">
+                            {recipe.analyzedInstructions.length > 0 ? (
+                                recipe.analyzedInstructions[0].steps.map(step => (
+                                    <li key={step.number}>{step.step}</li>
+                                ))
+                            ) : (
+                                <li>{recipe.instructions}</li>
+                            )}
+                        </ul>
+                    </div>
+
+                    <div className="recipe-meta-row">
+                    <span className="recipe-meta">
+                        <span role="img" aria-label="clock">⏱️</span>
+                        Cooking Time: {recipe.readyInMinutes} mins
+                    </span>
+                        <span className="recipe-meta">
+                        <span className="star" role="img" aria-label="star">★</span>
+                        Rating: {recipe.spoonacularScore
+                            ? (recipe.spoonacularScore / 20).toFixed(1)
+                            : '4.5'
+                        }
+                    </span>
                     </div>
                 </div>
             </div>
