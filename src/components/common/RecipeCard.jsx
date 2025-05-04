@@ -1,33 +1,8 @@
 import PropTypes from 'prop-types';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import './RecipeCard.css';
-import {useEffect, useState} from "react";
+import FavoriteButton from "./FavoriteButton.jsx";
 
 function RecipeCard({ recipe, onClick }) {
-    const [isFavorite, setIsFavorite] = useState(false);
-
-    useEffect(() => {
-        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-        const isAlreadyFavorite = favorites.some(fav => fav.id === recipe.id);
-        setIsFavorite(isAlreadyFavorite);
-    }, [recipe.id]);
-
-    const toggleFavorite = (e) => {
-        e.stopPropagation();
-
-        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-
-        if(isFavorite) {
-            const updatedFavorites = favorites.filter(fav => fav.id !== recipe.id);
-            localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-            setIsFavorite(false);
-        } else {
-            const updatedFavorites = [...favorites, recipe];
-            localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-            setIsFavorite(true);
-        }
-    };
-
     return (
         <div className="recipe-card">
             <div className="recipe-image-container">
@@ -36,13 +11,7 @@ function RecipeCard({ recipe, onClick }) {
                     alt={recipe.title}
                     className="recipe-image"
                 />
-                <button
-                    className="favorite-button"
-                    onClick={toggleFavorite}
-                    aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-                >
-                    {isFavorite ? <FaHeart className="favorite-icon" /> : <FaRegHeart className="favorite-icon" />}
-                </button>
+                <FavoriteButton recipe={recipe} className="card-favorite" />
             </div>
             <div className="recipe-info">
                 <h3 className="recipe-title">{recipe.title}</h3>
