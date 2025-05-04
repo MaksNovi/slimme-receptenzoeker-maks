@@ -1,8 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './SearchRecipes.css';
 import SearchBar from "../components/common/SearchBar.jsx";
+import RecipeCard from "../components/common/RecipeCard.jsx";
 
 function SearchRecipes() {
+    const navigate = useNavigate();
+    const [ingredients, setIngredients] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -33,6 +37,10 @@ function SearchRecipes() {
         searchRecipes(ingredientsList);
     };
 
+    const navigateToRecipe = (recipeId) => {
+        navigate(`/recipe/${recipeId}`);
+    };
+
     return (
         <div className="search-recipes-page">
             <div className="search-container">
@@ -44,38 +52,17 @@ function SearchRecipes() {
                 <SearchBar onSearch={handleSearch} />
             </div>
 
-            <div className="results-container">
-                {isLoading ? (
-                    <div className="loading">Loading recipes...</div>
-                ) : error ? (
-                    <div className="error">{error}</div>
-                ) : searchResults.length > 0 ? (
-                    <div className="recipe-grid">
-                        {searchResults.map(recipe => (
-                            <div key={recipe.id} className="recipe-card">
-                                <img
-                                    src={recipe.image}
-                                    alt={recipe.title}
-                                    className="recipe-image"
+            <div className="results-container" aria-live="polite">
+                        <h3 className="results-title">Found recipes</h3>
+                        <div className="recipe-grid">
+                            {searchResults.map(recipe => (
+                                <RecipeCard
+                                    key={recipe.id}
+                                    recipe={recipe}
+                                    onClick={navigateToRecipe}
                                 />
-                                <div className="recipe-info">
-                                    <h3 className="recipe-title">{recipe.title}</h3>
-                                    <div className="recipe-stats">
-                                        <span>Ingredients used: {recipe.usedIngredientCount}</span>
-                                        <span>Missing ingredients: {recipe.missedIngredientCount}</span>
-                                    </div>
-                                    <button className="view-recipe-button">
-                                        View recipe
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="empty-state">
-                        <p>Please enter the ingredients you have to search for recipes.</p>
-                    </div>
-                )}
+                            ))}
+                        </div>
             </div>
         </div>
     );
