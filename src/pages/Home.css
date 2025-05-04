@@ -1,0 +1,25 @@
+/* src/pages/Home.css */
+.home-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.hero-section {
+    text-align: center;
+    max-width: 800px;
+}
+
+.welcome-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.welcome-text {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
