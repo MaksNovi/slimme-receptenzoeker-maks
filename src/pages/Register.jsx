@@ -1,7 +1,16 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Login.css';
 
 function Register() {
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log('Register attempt with:', { username, email, password });
+    };
     return (
         <div className="login-page">
             <div className="login-container">
@@ -17,12 +26,14 @@ function Register() {
                         <h2>Register</h2>
                         <p>Create an account to save your favorite recipes</p>
 
-                        <form className="login-form">
+                        <form onSubmit={handleSubmit} className="login-form">
                             <div className="form-group">
                                 <label htmlFor="username">USERNAME</label>
                                 <input
                                     type="text"
                                     id="username"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
                                     placeholder="Choose a username"
                                     required
                                 />
@@ -32,6 +43,8 @@ function Register() {
                                 <input
                                     type="email"
                                     id="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     placeholder="Enter your email address"
                                     required
                                 />
@@ -41,6 +54,8 @@ function Register() {
                                 <input
                                     type="password"
                                     id="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                     placeholder="Create a password"
                                     required
                                 />
