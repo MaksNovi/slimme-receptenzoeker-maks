@@ -1,54 +1,84 @@
 import { useState } from 'react';
 import {Link, useNavigate} from 'react-router-dom';
+import useFormValidation from "../hooks/useFormValidation.jsx";
 import './Login.css';
+import FormInput from "../components/common/FormInput.jsx";
 
 function Register() {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [apiError, setApiError] = useState('');
     const navigate = useNavigate();
 
-    const validateForm = () => {
-        const newErrors = {}
+    const initialValues = {
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+    };
 
-        // Validate username
-        if (username.length < 5) {
-            newErrors.username = 'Username must be at least 5 characters long';
+    const validationRules = {
+        username: {
+            required: true,
+            minLength: 5,
+            messages: {
+                required: 'Username is required',
+                minLength: 'Username must be at least 5 characters long'
+            }
+        },
+        email: {
+            required: true,
+            email: true,
+            messages: {
+                required: 'Email is required',
+                email: 'Email is not valid'
+            }
+        },
+        password: {
+            required: true,
+            minLength: 8,
+            uppercase: true,
+            messages: {
+                required: 'Password is required',
+                minLength: 'Password must be at least 8 characters long',
+                uppercase: 'Password must contain at least one uppercase letter'
+            }
+        },
+        confirmPassword: {
+            required: true,
+            match: 'Passwords do not match',
+            messages: {
+                required: 'Confirm password is required',
+                match: 'Passwords do not match'
+            }
         }
+    };
 
-        // Validate email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if(!emailRegex.test(email)) {
-            newErrors.email = 'Please enter valid email address';
-        }
+    const {
+        values,
+        errors,
+        touched,
+        handleChange,
+        handleBlur,
+        validateForm,
+        setErrors
+    } = useFormValidation(initialValues, validationRules);
 
-        // Validate password
-        if(password.length < 6) {
-            newErrors.password = 'Password must be at least 6 characters long';
-        }
-
-        if(!/[A-Z]/.test(password)) {
-            newErrors.password = 'Password must contain at least one uppercase letter';
-        }
-
-        if(password !== confirmPassword) {
-            newErrors.confirmPassword = 'Passwords do not match';
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setApiError('');
+
+        // Validation for passwords matching confirmation
+        if(values.password !== values.confirmPassword) {
+            setErrors(prev => ({
+                ...prev,
+                confirmPassword: validationRules.confirmPassword.messages.match
+            }));
+            return;
+        }
 
         if(validateForm()) {
             setIsLoading(true);
-            setApiError('');
 
             try {
                 const response = await fetch('https://frontend-educational-backend.herokuapp.com/api/auth/signup', {
@@ -57,30 +87,29 @@ function Register() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        username,
-                        email,
-                        password,
+                        username: values.username,
+                        email: values.email,
+                        password: values.password,
                         role: ["user"]
                     })
                 });
 
                 if(!response.ok) {
                     const errorData = await response.json();
-                    setApiError(errorData.message || 'Registration failed');
+                    throw new Error(errorData.message || 'Registration failed');
                 }
 
-                //Navigate to login page after successful registration
                 navigate('/login', {
-                    state: {message: 'Registration successful! You can now log in.'}
+                    state: { message: 'Registration successful, you can now log in.' }
                 });
             } catch (error) {
-                console.log('registration error', error);
-                setApiError(error.message || 'Registration failed');
+                setApiError(error.message);
             } finally {
                 setIsLoading(false);
             }
         }
     };
+
     return (
         <div className="login-page">
             <div className="login-container">
@@ -95,64 +124,62 @@ function Register() {
                     <div className="login-form-container">
                         <h2>Register</h2>
                         <p>Create an account to save your favorite recipes</p>
-                        {apiError && <div className="api-error">{apiError}</div>}
+
+                        {apiError && <div className="api-error-message">{apiError}</div>}
 
                         <form onSubmit={handleSubmit} className="login-form">
-                            <div className="form-group">
-                                <label htmlFor="username">USERNAME</label>
-                                <input
-                                    type="text"
-                                    id="username"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    placeholder="Choose a username"
-                                    className={errors.username ? 'input-error' : ''}
-                                    required
-                                />
-                                {errors.username && <span className="error-message">{errors.username}</span>}
-                            </div>
+                            <FormInput
+                                label="Username"
+                                name="username"
+                                value={values.username}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errors.username}
+                                touched={touched.username}
+                                placeholder="Choose a username"
+                                required
+                            />
 
-                            <div className="form-group">
-                                <label htmlFor="email">EMAIL</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="Enter your email address"
-                                    className={errors.email ? 'input-error' : ''}
-                                    required
-                                />
-                                {errors.email && <span className="error-message">{errors.email}</span>}
-                            </div>
+                            <FormInput
+                                label="Email"
+                                name="email"
+                                type="email"
+                                value={values.email}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errors.email}
+                                touched={touched.email}
+                                placeholder="Enter your email address"
+                                required
+                            />
 
-                            <div className="form-group">
-                                <label htmlFor="password">PASSWORD</label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="Create a password"
-                                    className={errors.password ? 'input-error' : ''}
-                                    required
-                                />
-                                {errors.password && <span className="error-message">{errors.password}</span>}
+                            <FormInput
+                                label="Password"
+                                name="password"
+                                type="password"
+                                value={values.password}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errors.password}
+                                touched={touched.password}
+                                placeholder="Create a password"
+                                required
+                            />
 
-                                <label htmlFor="confirmPassword">CONFIRM PASSWORD</label>
-                                <input
-                                    type="password"
-                                    id="confirmPassword"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    placeholder="Confirm your password"
-                                    className={errors.confirmPassword ? 'input-error' : ''}
-                                    required
-                                />
-                                {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
-                            </div>
+                            <FormInput
+                                label="Confirm Password"
+                                name="confirmPassword"
+                                type="password"
+                                value={values.confirmPassword}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errors.confirmPassword}
+                                touched={touched.confirmPassword}
+                                placeholder="Confirm your password"
+                                required
+                            />
 
-                            <button type="submit" className="login-button" disabled={isLoading}>{isLoading ? 'Registering...' : 'REGISTER'}</button>
+                            <button type="submit" className="login-button" disabled={isLoading}>{isLoading ? 'Registering...' : 'Register'}</button>
                         </form>
                     </div>
 

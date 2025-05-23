@@ -28,8 +28,8 @@ const useFormValidation = (initialValue, validationRules) => {
         }
 
         // Require uppercase validation
-        if(rules.requireUppercase && value && !/[A-Z]/.test(value)) {
-            return rules.messages?.requireUppercase || `${name} must contain at least one uppercase letter`;
+        if(rules.uppercase && value && !/[A-Z]/.test(value)) {
+            return rules.messages?.uppercase || `${name} must contain at least one uppercase letter`;
         }
 
         return '';

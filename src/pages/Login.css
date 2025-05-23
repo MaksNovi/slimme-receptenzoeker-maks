@@ -76,7 +76,6 @@
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
 }
 
 .login-button {
@@ -132,13 +131,14 @@
     cursor: not-allowed;
 }
 
-.api-error {
+.api-error-message {
     background-color: #ffebee;
     color: #e74c3c;
     padding: 5px 15px;
     border-radius: 4px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     text-align: center;
+    border: 1px solid #ffcdd2;
 }
 
 @media (max-width: 768px) {
