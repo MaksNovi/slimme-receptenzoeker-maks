@@ -72,8 +72,10 @@ function Register() {
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
                                     placeholder="Choose a username"
+                                    className={errors.username ? 'input-error' : ''}
                                     required
                                 />
+                                {errors.username && <span className="error-message">{errors.username}</span>}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="email">EMAIL</label>
@@ -83,8 +85,10 @@ function Register() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="Enter your email address"
+                                    className={errors.email ? 'input-error' : ''}
                                     required
                                 />
+                                {errors.email && <span className="error-message">{errors.email}</span>}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">PASSWORD</label>
@@ -94,8 +98,10 @@ function Register() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="Create a password"
+                                    className={errors.password ? 'input-error' : ''}
                                     required
                                 />
+                                {errors.password && <span className="error-message">{errors.password}</span>}
 
                                 <label htmlFor="confirmPassword">CONFIRM PASSWORD</label>
                                 <input
@@ -104,9 +110,10 @@ function Register() {
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     placeholder="Confirm your password"
+                                    className={errors.confirmPassword ? 'input-error' : ''}
                                     required
                                 />
-                                {passwordError && <span className="error-message">{passwordError}</span>}
+                                {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
                             </div>
                             <button type="submit" className="login-button">REGISTER</button>
                         </form>

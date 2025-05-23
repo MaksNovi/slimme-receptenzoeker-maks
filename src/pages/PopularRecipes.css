@@ -52,7 +52,7 @@
     100% { transform: rotate(360deg); }
 }
 
-.error-message {
+.error-message-recipes {
     text-align: center;
     padding: 40px;
     color: #e74c3c;
