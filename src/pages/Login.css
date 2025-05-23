@@ -161,6 +161,20 @@
     border-color: #e74c3c !important;
 }
 
+.login-button:disabled {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+.api-error {
+    background-color: #ffebee;
+    color: #e74c3c;
+    padding: 5px 15px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
 @media (max-width: 768px) {
     .login-container {
         flex-direction: column;

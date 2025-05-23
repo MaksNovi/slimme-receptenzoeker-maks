@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import './Login.css';
 
 function Register() {
@@ -7,8 +7,10 @@ function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [passwordError, setPasswordError] = useState('');
     const [errors, setErrors] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [apiError, setApiError] = useState('');
+    const navigate = useNavigate();
 
     const validateForm = () => {
         const newErrors = {}
@@ -41,11 +43,42 @@ function Register() {
         return Object.keys(newErrors).length === 0;
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if(validateForm()) {
-            console.log('Register attempt with:', { username, email, password });
+            setIsLoading(true);
+            setApiError('');
+
+            try {
+                const response = await fetch('https://frontend-educational-backend.herokuapp.com/api/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username,
+                        email,
+                        password,
+                        role: ["user"]
+                    })
+                });
+
+                if(!response.ok) {
+                    const errorData = await response.json();
+                    setApiError(errorData.message || 'Registration failed');
+                }
+
+                //Navigate to login page after successful registration
+                navigate('/login', {
+                    state: {message: 'Registration successful! You can now log in.'}
+                });
+            } catch (error) {
+                console.log('registration error', error);
+                setApiError(error.message || 'Registration failed');
+            } finally {
+                setIsLoading(false);
+            }
         }
     };
     return (
@@ -62,6 +95,7 @@ function Register() {
                     <div className="login-form-container">
                         <h2>Register</h2>
                         <p>Create an account to save your favorite recipes</p>
+                        {apiError && <div className="api-error">{apiError}</div>}
 
                         <form onSubmit={handleSubmit} className="login-form">
                             <div className="form-group">
@@ -77,6 +111,7 @@ function Register() {
                                 />
                                 {errors.username && <span className="error-message">{errors.username}</span>}
                             </div>
+
                             <div className="form-group">
                                 <label htmlFor="email">EMAIL</label>
                                 <input
@@ -90,6 +125,7 @@ function Register() {
                                 />
                                 {errors.email && <span className="error-message">{errors.email}</span>}
                             </div>
+
                             <div className="form-group">
                                 <label htmlFor="password">PASSWORD</label>
                                 <input
@@ -115,7 +151,8 @@ function Register() {
                                 />
                                 {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
                             </div>
-                            <button type="submit" className="login-button">REGISTER</button>
+
+                            <button type="submit" className="login-button" disabled={isLoading}>{isLoading ? 'Registering...' : 'REGISTER'}</button>
                         </form>
                     </div>
 
