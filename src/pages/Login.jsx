@@ -1,15 +1,82 @@
-// src/pages/Login.jsx
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import {useAuth} from '../contexts/AuthContext.jsx';
+import useFormValidation from "../hooks/useFormValidation.jsx";
+import FormInput from "../components/common/FormInput.jsx";
 import './Login.css';
 
 function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+   const [isLoading, setIsLoading] = useState(false);
+   const [apiError, setApiError] = useState('');
+   const { login } = useAuth();
+   const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+   const initialValue = {
+       email: '',
+       password: ''
+   };
+
+   const validationRules = {
+       email: {
+           required: true,
+           email: true,
+              messages: {
+                required: 'Email is required',
+                email: 'Invalid email format'
+              }
+       },
+       password: {
+           required: true,
+           minLength: 6,
+           requireUppercase: true,
+           messages: {
+               required: 'Password is required',
+           }
+       }
+   };
+
+   const {
+       values,
+       errors,
+       touched,
+       handleChange,
+       handleBlur,
+       validateForm
+   } = useFormValidation(initialValue, validationRules);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Login attempt with:', email, password);
+        setApiError('');
+
+        if(validateForm()) {
+            setIsLoading(true);
+
+            try {
+                const response = await fetch('https://frontend-educational-backend.herokuapp.com/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: values.email,
+                        password: values.password
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Login failed');
+                }
+
+                const userData = await response.json();
+                login(userData);
+                navigate('/');
+            } catch (error) {
+                setApiError(error.message);
+            } finally {
+                setIsLoading(false);
+            }
+        }
     };
 
     return (
@@ -27,30 +94,42 @@ function Login() {
                         <h2>Log In</h2>
                         <p>Join us to explore recipes</p>
 
+                        {apiError && (
+                            <div className="api-error-message">
+                                {apiError}
+                            </div>
+                        )}
+
                         <form onSubmit={handleSubmit} className="login-form">
-                            <div className="form-group">
-                                <label htmlFor="email">EMAIL</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="Enter your email address"
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="password">PASSWORD</label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="Enter your password"
-                                    required
-                                />
-                            </div>
-                            <button type="submit" className="login-button">LOG IN</button>
+                            <FormInput
+                                label="Email"
+                                name="email"
+                                type="email"
+                                value={values.email}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errors.email}
+                                touched={touched.email}
+                                placeholder="Enter your email address"
+                                required
+                            />
+
+                            <FormInput
+                                label="Password"
+                                name="password"
+                                type="password"
+                                value={values.password}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errors.password}
+                                touched={touched.password}
+                                placeholder="Enter your password"
+                                required
+                            />
+
+                            <button type="submit" className="login-button" disabled={isLoading}>
+                                {isLoading ? 'Logging in...' : 'Log In'}
+                            </button>
                         </form>
                     </div>
 
