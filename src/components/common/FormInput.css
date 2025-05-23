@@ -1,0 +1,41 @@
+.form-input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 6px;
+}
+
+.required-asterisk {
+    color: #e74c3c;
+    margin-left: 2px;
+}
+
+.form-input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.1);
+}
+
+.form-input-error {
+    border-color: #e74c3c;
+}
+
+.form-error-message {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 4px;
+}

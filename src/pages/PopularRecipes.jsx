@@ -48,7 +48,7 @@ function PopularRecipes() {
                     <p>Loading popular recipes...</p>
                 </div>
             ) : error ? (
-                <div className="error-message">
+                <div className="error-message-recipes">
                     <p>{error}</p>
                     <button onClick={() => window.location.reload()} className="retry-button">
                         Try Again
