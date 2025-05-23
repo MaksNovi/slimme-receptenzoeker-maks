@@ -7,11 +7,14 @@ import SearchRecipes from "./pages/SearchRecipes.jsx";
 import RecipeDetails from "./pages/RecipeDetails.jsx";
 import PopularRecipes from "./pages/PopularRecipes.jsx";
 import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
+import {AuthProvider} from "./contexts/AuthContext.tsx";
 import './App.css'
 
 function App() {
 
   return (
+      <AuthProvider>
       <Router>
           <div className="app-container">
               <Header />
@@ -22,11 +25,13 @@ function App() {
                       <Route path="/recipe/:id" element={<RecipeDetails />} />
                       <Route path="/popular-recipes" element={<PopularRecipes />} />
                       <Route path="/login" element={<Login />} />
+                      <Route path="/register" element={<Register />} />
                   </Routes>
               </main>
               <Footer/>
           </div>
       </Router>
+      </AuthProvider>
   );
 }
 
