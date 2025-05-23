@@ -6,9 +6,20 @@ function Register() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [passwordError, setPasswordError] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log('Register attempt with:', { username, email, password, confirmPassword });
+
+        // Validate password and confirm password
+        if (password !== confirmPassword) {
+            setPasswordError('Passwords do not match');
+            return;
+        }
+
+        setPasswordError('');
         console.log('Register attempt with:', { username, email, password });
     };
     return (
@@ -59,6 +70,17 @@ function Register() {
                                     placeholder="Create a password"
                                     required
                                 />
+
+                                <label htmlFor="confirmPassword">CONFIRM PASSWORD</label>
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    placeholder="Confirm your password"
+                                    required
+                                />
+                                {passwordError && <span className="error-message">{passwordError}</span>}
                             </div>
                             <button type="submit" className="login-button">REGISTER</button>
                         </form>
