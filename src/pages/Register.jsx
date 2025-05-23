@@ -8,19 +8,45 @@ function Register() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [errors, setErrors] = useState({});
+
+    const validateForm = () => {
+        const newErrors = {}
+
+        // Validate username
+        if (username.length < 5) {
+            newErrors.username = 'Username must be at least 5 characters long';
+        }
+
+        // Validate email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(!emailRegex.test(email)) {
+            newErrors.email = 'Please enter valid email address';
+        }
+
+        // Validate password
+        if(password.length < 6) {
+            newErrors.password = 'Password must be at least 6 characters long';
+        }
+
+        if(!/[A-Z]/.test(password)) {
+            newErrors.password = 'Password must contain at least one uppercase letter';
+        }
+
+        if(password !== confirmPassword) {
+            newErrors.confirmPassword = 'Passwords do not match';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Register attempt with:', { username, email, password, confirmPassword });
 
-        // Validate password and confirm password
-        if (password !== confirmPassword) {
-            setPasswordError('Passwords do not match');
-            return;
+        if(validateForm()) {
+            console.log('Register attempt with:', { username, email, password });
         }
-
-        setPasswordError('');
-        console.log('Register attempt with:', { username, email, password });
     };
     return (
         <div className="login-page">
