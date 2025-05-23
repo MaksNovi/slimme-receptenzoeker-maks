@@ -1,11 +1,13 @@
-// src/pages/Home.js
 import { Link } from 'react-router-dom';
 import './Home.css';
+import {useAuthContext} from "../contexts/AuthContext.js";
 import mealImage1 from '../assets/mealImage1.jpg';
 import mealImage2 from '../assets/mealImage2.jpg';
 import mealImage3 from '../assets/mealImage3.jpg';
 
 function Home() {
+    const { isAuthenticated } = useAuthContext();
+
     return (
         <div className="home-page">
             <div className="hero-section">
@@ -44,7 +46,9 @@ function Home() {
 
                 <div className="cta-section">
                     <Link to="/search-results" className="cta-button">Start Searching Recipes</Link>
-                    <Link to="/register" className="cta-button secondary">Create an Account</Link>
+                    {!isAuthenticated && (
+                        <Link to="/register" className="cta-button secondary">Create an Account</Link>
+                    )}
                 </div>
             </div>
         </div>

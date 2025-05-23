@@ -35,11 +35,11 @@ function Register() {
         },
         password: {
             required: true,
-            minLength: 8,
+            minLength: 6,
             uppercase: true,
             messages: {
                 required: 'Password is required',
-                minLength: 'Password must be at least 8 characters long',
+                minLength: 'Password must be at least 6 characters long',
                 uppercase: 'Password must contain at least one uppercase letter'
             }
         },

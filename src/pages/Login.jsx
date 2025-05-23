@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {useAuth} from '../contexts/AuthContext.jsx';
+import {useAuthContext} from '../contexts/AuthContext.tsx';
 import useFormValidation from "../hooks/useFormValidation.jsx";
 import FormInput from "../components/common/FormInput.jsx";
 import './Login.css';
@@ -8,22 +8,20 @@ import './Login.css';
 function Login() {
    const [isLoading, setIsLoading] = useState(false);
    const [apiError, setApiError] = useState('');
-   const { login } = useAuth();
+   const { login } = useAuthContext();
    const navigate = useNavigate();
 
    const initialValue = {
-       email: '',
+       username: '',
        password: ''
    };
 
    const validationRules = {
-       email: {
+       username: {
            required: true,
-           email: true,
-              messages: {
-                required: 'Email is required',
-                email: 'Invalid email format'
-              }
+           messages: {
+               required: 'Username is required',
+           }
        },
        password: {
            required: true,
@@ -52,13 +50,13 @@ function Login() {
             setIsLoading(true);
 
             try {
-                const response = await fetch('https://frontend-educational-backend.herokuapp.com/api/auth/login', {
+                const response = await fetch('https://frontend-educational-backend.herokuapp.com/api/auth/signin', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        email: values.email,
+                        username: values.username,
                         password: values.password
                     })
                 });
@@ -102,15 +100,15 @@ function Login() {
 
                         <form onSubmit={handleSubmit} className="login-form">
                             <FormInput
-                                label="Email"
-                                name="email"
-                                type="email"
-                                value={values.email}
+                                label="Username"
+                                name="username"
+                                type="username"
+                                value={values.username}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                error={errors.email}
-                                touched={touched.email}
-                                placeholder="Enter your email address"
+                                error={errors.username}
+                                touched={touched.username}
+                                placeholder="Enter your username"
                                 required
                             />
 
