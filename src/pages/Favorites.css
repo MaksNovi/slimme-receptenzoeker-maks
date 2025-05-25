@@ -1,0 +1,21 @@
+.favorites-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.favorites-page h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #e74c3c;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.favorites-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+

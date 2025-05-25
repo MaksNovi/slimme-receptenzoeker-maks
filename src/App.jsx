@@ -6,6 +6,7 @@ import Footer from "./components/common/Footer.jsx";
 import SearchRecipes from "./pages/SearchRecipes.jsx";
 import RecipeDetails from "./pages/RecipeDetails.jsx";
 import PopularRecipes from "./pages/PopularRecipes.jsx";
+import Favorites from "./pages/Favorites.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import {AuthProvider} from "./contexts/AuthContext.tsx";
@@ -24,6 +25,7 @@ function App() {
                       <Route path="/search-results" element={<SearchRecipes />} />
                       <Route path="/recipe/:id" element={<RecipeDetails />} />
                       <Route path="/popular-recipes" element={<PopularRecipes />} />
+                      <Route path="/favorites" element={<Favorites/>} />
                       <Route path="/login" element={<Login />} />
                       <Route path="/register" element={<Register />} />
                   </Routes>
