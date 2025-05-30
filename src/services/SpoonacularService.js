@@ -13,7 +13,13 @@ export const searchRecipesByIngredients = async (ingredients, options = {}) => {
             throw new Error(`API responded with status: ${response.status}`);
         }
 
-        return await response.json();
+        const results = await response.json();
+
+        return {
+            results,
+            totalResults: results.length,
+            hasMoreResults: results.length === number
+        };
     } catch (error) {
         console.error('Error searching recipes by ingredients:', error);
         throw error;

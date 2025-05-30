@@ -4,18 +4,27 @@ import {searchRecipesByIngredients} from '../services/SpoonacularService';
 import SearchBar from "../components/common/SearchBar.jsx";
 import RecipeCard from "../components/common/RecipeCard.tsx";
 import './SearchRecipes.css';
+import Pagination from "../components/common/Pagination.js";
 
 function SearchRecipes() {
     const navigate = useNavigate();
     const [searchResults, setSearchResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [hasMore, setHasMore] = useState(false);
+    const [currentSearch, setCurrentSearch] = useState('');
+    const [totalPages, setTotalPages] = useState(0);
 
-    const handleSearch = async (searchIngredients) => {
+    const RECIPES_PER_PAGE = 12;
+
+
+    const handleSearch = async (searchIngredients, page = 1) => {
         if(!searchIngredients.trim()) return;
 
         setIsLoading(true);
         setError(null);
+        setCurrentSearch(searchIngredients);
 
         try {
             const formattedIngredients = searchIngredients
@@ -23,14 +32,34 @@ function SearchRecipes() {
                 .map(i => i.trim())
                 .join(',');
 
-            const results = await searchRecipesByIngredients(formattedIngredients);
-            setSearchResults(results);
+            const offset = (page - 1) * RECIPES_PER_PAGE;
+            const data = await searchRecipesByIngredients(formattedIngredients, {
+                number: RECIPES_PER_PAGE,
+                offset: offset,
+            });
+
+            setSearchResults(data.results);
+            setHasMore(data.hasMoreResults);
+            setCurrentPage(page);
+
+            if (data.hasMoreResults) {
+                setTotalPages(page + 1);
+            } else {
+                setTotalPages(page);
+            }
         } catch (err) {
             setError(`An error occurred: ${err.message}`);
         } finally {
             setIsLoading(false);
         }
     };
+
+    const handlePageChange = (page) => {
+        if (currentSearch) {
+            handleSearch(currentSearch, page);
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+    }
 
     const navigateToRecipe = (recipeId) => {
         navigate(`/recipe/${recipeId}`);
@@ -44,7 +73,7 @@ function SearchRecipes() {
                     Enter the ingredients you have at home, separated by commas, and find recipes you can make with them.
                 </p>
 
-                <SearchBar onSearch={handleSearch} />
+                <SearchBar onSearch={(ingredients) => handleSearch(ingredients, 1)}/>
             </div>
 
             {isLoading && <div className="loading">Loading recipes...</div>}
@@ -63,6 +92,13 @@ function SearchRecipes() {
                             />
                         ))}
                     </div>
+
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                        hasMore={hasMore}
+                    />
                 </div>
             )}
 
