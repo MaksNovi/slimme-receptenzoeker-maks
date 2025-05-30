@@ -1,8 +1,8 @@
 import {useNavigate, useParams} from 'react-router-dom';
-import './RecipeDetails.css';
 import {useEffect, useState} from "react";
 import {getRecipeDetails} from "../services/SpoonacularService.js";
-import FavoriteButton from "../components/common/FavoriteButton.jsx";
+import FavoriteButton from "../components/common/FavoriteButton.tsx";
+import './RecipeDetails.css';
 
 function RecipeDetails() {
     const {id} = useParams();

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import RecipeCard from '../components/common/RecipeCard.jsx';
-import { getPopularRecipes } from '../services/SpoonacularService';
+import {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {getPopularRecipes} from '../services/SpoonacularService';
+import RecipeCard from '../components/common/RecipeCard.tsx';
 import './PopularRecipes.css';
 
 function PopularRecipes() {

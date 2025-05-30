@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './SearchRecipes.css';
+import {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {searchRecipesByIngredients} from '../services/SpoonacularService';
 import SearchBar from "../components/common/SearchBar.jsx";
-import RecipeCard from "../components/common/RecipeCard.jsx";
-import { searchRecipesByIngredients } from '../services/SpoonacularService';
+import RecipeCard from "../components/common/RecipeCard.tsx";
+import './SearchRecipes.css';
 
 function SearchRecipes() {
     const navigate = useNavigate();
