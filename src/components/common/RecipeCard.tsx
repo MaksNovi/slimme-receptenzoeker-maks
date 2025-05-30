@@ -43,6 +43,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({recipe, onClick}) => {
     };
 
     return (
+        <>
         <div className="recipe-card">
             <div className="recipe-image-container">
                 <img
@@ -55,12 +56,6 @@ const RecipeCard: React.FC<RecipeCardProps> = ({recipe, onClick}) => {
                     className="card-favorite"
                     onClick={handleFavoriteClick}
                 />
-                {showError && (
-                    <MessageBox
-                        message={"Log in to add recipes to your favorites."}
-                        onClose={() => setShowError(false)}
-                    />
-                )}
             </div>
             <div className="recipe-info">
                 <h3 className="recipe-title">{recipe.title}</h3>
@@ -88,6 +83,13 @@ const RecipeCard: React.FC<RecipeCardProps> = ({recipe, onClick}) => {
                 </button>
             </div>
         </div>
+            {showError && (
+                <MessageBox
+                    message={"Log in to add recipes to your favorites."}
+                    onClose={() => setShowError(false)}
+                />
+            )}
+        </>
     );
 }
 
