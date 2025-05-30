@@ -4,11 +4,13 @@ import "./MessageBox.css";
 interface MessageBoxProps {
     message: string;
     onClose: () => void;
+    positioned?: 'fixed' | 'absolute';
 }
 
-const MessageBox: React.FC<MessageBoxProps> = ({message, onClose}) => {
+const MessageBox: React.FC<MessageBoxProps> = ({message, onClose, positioned = 'fixed'}) => {
     return (
-        <div className="messagebox-overlay" role="alert" aria-live="assertive">
+        <div className={`messagebox-overlay ${positioned === 'absolute' ? 'messagebox-overlay--absolute' : ''}`}
+             role="alert" aria-live="assertive">
             <div className="messagebox-container">
                 <p>{message}</p>
 
