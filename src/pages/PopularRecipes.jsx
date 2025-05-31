@@ -1,14 +1,12 @@
 import {useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
 import {getPopularRecipes} from '../services/SpoonacularService';
-import RecipeCard from '../components/common/RecipeCard.tsx';
+import RecipeList from "../components/common/RecipeList.js";
 import './PopularRecipes.css';
 
 function PopularRecipes() {
     const [popularRecipes, setPopularRecipes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPopularRecipes = async () => {
@@ -28,10 +26,6 @@ function PopularRecipes() {
 
         fetchPopularRecipes();
     }, []);
-
-    const navigateToRecipe = (recipeId) => {
-        navigate(`/recipe/${recipeId}`);
-    };
 
     return (
         <div className="popular-recipes-page">
@@ -55,14 +49,12 @@ function PopularRecipes() {
                     </button>
                 </div>
             ) : (
-                <div className="recipe-grid">
-                    {popularRecipes.map(recipe => (
-                        <RecipeCard
-                            key={recipe.id}
-                            recipe={recipe}
-                            onClick={() => navigateToRecipe(recipe.id)}
-                        />
-                    ))}
+                <div className="popular-recipes-content">
+                    {popularRecipes.length === 0 ? (
+                        <p className="no-recipes-message">No popular recipes found at the moment.</p>
+                    ) : (
+                        <RecipeList recipes={popularRecipes}/>
+                    )}
                 </div>
             )}
         </div>
