@@ -1,25 +1,16 @@
 import {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
 import {searchRecipesByIngredients} from '../services/SpoonacularService';
 import SearchBar from "../components/common/SearchBar.jsx";
-import RecipeCard from "../components/common/RecipeCard.tsx";
+import RecipeList from "../components/common/RecipeList.jsx";
 import './SearchRecipes.css';
-import Pagination from "../components/common/Pagination.js";
 
 function SearchRecipes() {
-    const navigate = useNavigate();
     const [searchResults, setSearchResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [hasMore, setHasMore] = useState(false);
     const [currentSearch, setCurrentSearch] = useState('');
-    const [totalPages, setTotalPages] = useState(0);
 
-    const RECIPES_PER_PAGE = 12;
-
-
-    const handleSearch = async (searchIngredients, page = 1) => {
+    const handleSearch = async (searchIngredients) => {
         if(!searchIngredients.trim()) return;
 
         setIsLoading(true);
@@ -32,37 +23,17 @@ function SearchRecipes() {
                 .map(i => i.trim())
                 .join(',');
 
-            const offset = (page - 1) * RECIPES_PER_PAGE;
             const data = await searchRecipesByIngredients(formattedIngredients, {
-                number: RECIPES_PER_PAGE,
-                offset: offset,
+                number: 100, // Fetch more results for pagination
+                offset: 0,
             });
 
             setSearchResults(data.results);
-            setHasMore(data.hasMoreResults);
-            setCurrentPage(page);
-
-            if (data.hasMoreResults) {
-                setTotalPages(page + 1);
-            } else {
-                setTotalPages(page);
-            }
         } catch (err) {
             setError(`An error occurred: ${err.message}`);
         } finally {
             setIsLoading(false);
         }
-    };
-
-    const handlePageChange = (page) => {
-        if (currentSearch) {
-            handleSearch(currentSearch, page);
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-    }
-
-    const navigateToRecipe = (recipeId) => {
-        navigate(`/recipe/${recipeId}`);
     };
 
     return (
@@ -82,23 +53,10 @@ function SearchRecipes() {
 
             {!isLoading && !error && searchResults.length > 0 && (
                 <div className="results-container" aria-live="polite">
-                    <h3 className="results-title">Recipes found</h3>
-                    <div className="recipe-grid">
-                        {searchResults.map(recipe => (
-                            <RecipeCard
-                                key={recipe.id}
-                                recipe={recipe}
-                                onClick={navigateToRecipe}
-                            />
-                        ))}
-                    </div>
+                    <h3 className="results-title">Found {searchResults.length} recipes
+                        for &quot;{currentSearch}&quot;</h3>
 
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={handlePageChange}
-                        hasMore={hasMore}
-                    />
+                    <RecipeList recipes={searchResults}/>
                 </div>
             )}
 

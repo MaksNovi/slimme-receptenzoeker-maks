@@ -1,61 +1,45 @@
 import './Pagination.css';
 
-const Pagination = ({currentPage, totalPages, onPageChange, hasMore}) => {
-    const handlePrevious = () => {
-        if (currentPage > 1) {
-            onPageChange(currentPage - 1);
-        }
-    };
+interface PaginationProps {
+    totalPages: number;
+    currentPage: number;
+    setCurrentPage: (page: number) => void;
+}
 
-    const handleNext = () => {
-        if (hasMore) {
-            onPageChange(currentPage + 1);
-        }
-    };
+const Pagination: React.FC<PaginationProps> = ({totalPages, currentPage, setCurrentPage}) => {
+    if (totalPages <= 1) return null;
 
-    const renderPageNumbers = () => {
-        const pages = [];
-        const startPage = Math.max(1, currentPage - 2);
-        const endPage = Math.min(totalPages || currentPage + 2, currentPage + 2);
-
-        for (let i = startPage; i <= endPage; i++) {
-            pages.push(
-                <button
-                    key={i}
-                    onClick={() => onPageChange(i)}
-                    className={`page-number ${currentPage === i ? 'active' : ''}`}
-                    disabled={currentPage === i}
-                >
-                    {i}
-                </button>
-            );
-        }
-
-        return pages;
-    };
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+    }
 
     return (
-        <div className="pagination">
+        <nav className="pagination-container">
             <button
-                onClick={handlePrevious}
+                onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="pagination-btn"
+                className="page-item"
             >
                 Previous
             </button>
-
-            <div className="page-numbers">
-                {renderPageNumbers()}
-            </div>
-
+            {pageNumbers.map(number => (
+                <button
+                    key={number}
+                    onClick={() => setCurrentPage(number)}
+                    className={`page-item${currentPage === number ? ' active' : ''}`}
+                >
+                    {number}
+                </button>
+            ))}
             <button
-                onClick={handleNext}
-                disabled={!hasMore}
-                className="pagination-btn"
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="page-item"
             >
                 Next
             </button>
-        </div>
+        </nav>
     );
 };
 

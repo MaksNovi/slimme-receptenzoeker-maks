@@ -16,7 +16,7 @@ interface Recipe {
 
 interface RecipeCardProps {
     recipe: Recipe;
-    onClick: (id: number) => void;
+    onClick?: (id: number) => void;
 }
 
 const RecipeCard: React.FC<RecipeCardProps> = ({recipe, onClick}) => {
