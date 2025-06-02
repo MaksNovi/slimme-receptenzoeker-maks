@@ -1,6 +1,5 @@
-.search-bar-form {
-    display: flex;
-    margin-bottom: 15px;
+.search-bar-container {
+    position: relative;
 }
 
 .search-bar-input {

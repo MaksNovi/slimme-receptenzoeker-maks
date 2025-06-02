@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {searchRecipesByIngredients} from '../services/SpoonacularService';
-import SearchBar from "../components/common/SearchBar.jsx";
+import SearchBar from "../components/common/SearchBar.tsx";
 import RecipeList from "../components/common/RecipeList.jsx";
 import './SearchRecipes.css';
 
