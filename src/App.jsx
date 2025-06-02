@@ -1,4 +1,6 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
+import {SearchContextProvider} from "./contexts/SearchContext.js";
+import {AuthProvider} from "./contexts/AuthContext.tsx";
 import Header from './components/common/Header.jsx';
 import Home from './pages/Home.jsx';
 import Footer from "./components/common/Footer.jsx";
@@ -8,9 +10,7 @@ import PopularRecipes from "./pages/PopularRecipes.jsx";
 import Favorites from "./pages/Favorites.tsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
-import {AuthProvider} from "./contexts/AuthContext.tsx";
 import './App.css'
-import {SearchContextProvider} from "./contexts/SearchContext.js";
 
 function App() {
 
