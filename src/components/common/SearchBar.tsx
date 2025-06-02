@@ -1,8 +1,10 @@
 import {useEffect, useState} from 'react';
+import {useSearch} from "../../contexts/SearchContext";
 import './SearchBar.css';
 
 function SearchBar({onSearch, placeholder = "Enter ingredients..."}) {
-    const [searchIngredients, setSearchIngredients] = useState('');
+    const {searchTerm: contextSearchTerm} = useSearch();
+    const [searchIngredients, setSearchIngredients] = useState(contextSearchTerm || '');
     const [recentSearches, setRecentSearches] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -12,6 +14,12 @@ function SearchBar({onSearch, placeholder = "Enter ingredients..."}) {
             setRecentSearches(JSON.parse(savedSearches));
         }
     }, []);
+
+    useEffect(() => {
+        if (contextSearchTerm && contextSearchTerm !== searchIngredients) {
+            setSearchIngredients(contextSearchTerm);
+        }
+    }, [contextSearchTerm]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -38,9 +46,17 @@ function SearchBar({onSearch, placeholder = "Enter ingredients..."}) {
         e.preventDefault();
         if (searchIngredients.trim()) {
             saveSearch(searchIngredients);
-            onSearch(searchIngredients);
+            onSearch(searchIngredients).catch(err => console.error('Error searching for recipes:', err));
             setShowSuggestions(false);
         }
+    };
+
+    const handleRecentSearchClick = (search) => {
+        setSearchIngredients(search);
+        onSearch(search).catch(error => {
+            console.error('Search failed:', error);
+        });
+        setShowSuggestions(false);
     };
 
     return (
@@ -62,7 +78,7 @@ function SearchBar({onSearch, placeholder = "Enter ingredients..."}) {
                     <h4>Recent Searches:</h4>
 
                     {recentSearches.map((search, index) => (
-                        <div key={index} onClick={() => setSearchIngredients(search)}>
+                        <div key={index} onClick={() => handleRecentSearchClick(search)} className="recent-search-item">
                             {search}
                         </div>
                     ))}
