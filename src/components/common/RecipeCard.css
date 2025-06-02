@@ -92,6 +92,7 @@
     font-size: 0.9rem;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-bottom: 8px;
 }
 
 .view-recipe-button:hover {
@@ -102,6 +103,40 @@
 .view-recipe-button:active {
     transform: translateY(0);
     background-color: #a93226;
+}
+
+.remove-favorite-text-button {
+    width: 100%;
+    background-color: transparent;
+    color: #e74c3c;
+    border: 2px solid #e74c3c;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.remove-favorite-text-button:hover {
+    background-color: #e74c3c;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+}
+
+.remove-favorite-text-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(231, 76, 60, 0.3);
+}
+
+.remove-favorite-text-button:before {
+    content: "🗑️";
+    font-size: 0.9rem;
 }
 
 .recipe-list {
