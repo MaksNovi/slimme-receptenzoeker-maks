@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {useAuthContext} from "../../contexts/AuthContext.js";
+import {useNavigate} from "react-router-dom";
 import FavoriteButton from "./FavoriteButton.js";
 import MessageBox from "./MessageBox";
 import './RecipeCard.css';
@@ -16,12 +17,20 @@ interface Recipe {
 
 interface RecipeCardProps {
     recipe: Recipe;
-    onClick: (id: number) => void;
+    onClick?: (id: number) => void;
+    onRemoveFavorite?: (id: number) => void;
+    showRemoveButton?: boolean;
 }
 
-const RecipeCard: React.FC<RecipeCardProps> = ({recipe, onClick}) => {
+const RecipeCard: React.FC<RecipeCardProps> = ({
+                                                   recipe,
+                                                   onClick,
+                                                   onRemoveFavorite,
+                                                   showRemoveButton = false
+                                               }) => {
     const {isAuthenticated} = useAuthContext();
     const [showError, setShowError] = useState(false);
+    const navigate = useNavigate();
 
     const handleFavoriteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
@@ -31,6 +40,21 @@ const RecipeCard: React.FC<RecipeCardProps> = ({recipe, onClick}) => {
             return;
         }
     };
+
+    const handleViewRecipeClick = () => {
+        if (onClick) {
+            onClick(recipe.id);
+        } else {
+            navigate(`/recipe/${recipe.id}`);
+        }
+    };
+
+    const handleRemoveFavoriteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        if (onRemoveFavorite) {
+            onRemoveFavorite(recipe.id);
+        }
+    }
 
     const favoriteButtonRecipe = {
         id: recipe.id,
@@ -51,11 +75,13 @@ const RecipeCard: React.FC<RecipeCardProps> = ({recipe, onClick}) => {
                     className="recipe-image"
                 />
 
-                <FavoriteButton
-                    recipe={favoriteButtonRecipe}
-                    className="card-favorite"
-                    onClick={handleFavoriteClick}
-                />
+                {!showRemoveButton && (
+                    <FavoriteButton
+                        recipe={favoriteButtonRecipe}
+                        className="card-favorite"
+                        onClick={handleFavoriteClick}
+                    />
+                )}
 
                 {showError && (
                     <MessageBox
@@ -65,6 +91,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({recipe, onClick}) => {
                     />
                 )}
             </div>
+
             <div className="recipe-info">
                 <h3 className="recipe-title">{recipe.title}</h3>
                 <div className="recipe-stats">
@@ -72,10 +99,12 @@ const RecipeCard: React.FC<RecipeCardProps> = ({recipe, onClick}) => {
                         <span className="stat-label">Used ingredients:</span>
                         <span className="stat-value">{recipe.usedIngredientCount}</span>
                     </div>
+
                     <div className="stat">
                         <span className="stat-label">Missing ingredients:</span>
                         <span className="stat-value">{recipe.missedIngredientCount}</span>
                     </div>
+
                     {recipe.readyInMinutes && (
                         <div className="stat">
                             <span className="stat-label">Prep time:</span>
@@ -83,12 +112,22 @@ const RecipeCard: React.FC<RecipeCardProps> = ({recipe, onClick}) => {
                         </div>
                     )}
                 </div>
+
                 <button
                     onClick={() => onClick(recipe.id)}
                     className="view-recipe-button"
                 >
                     View recipe
                 </button>
+
+                {showRemoveButton && (
+                    <button
+                        onClick={handleRemoveFavoriteClick}
+                        className="remove-favorite-text-button"
+                    >
+                        Remove from favorites
+                    </button>
+                )}
             </div>
         </div>
     );

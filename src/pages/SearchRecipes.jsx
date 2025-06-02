@@ -1,21 +1,21 @@
 import {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
 import {searchRecipesByIngredients} from '../services/SpoonacularService';
 import SearchBar from "../components/common/SearchBar.jsx";
-import RecipeCard from "../components/common/RecipeCard.tsx";
+import RecipeList from "../components/common/RecipeList.jsx";
 import './SearchRecipes.css';
 
 function SearchRecipes() {
-    const navigate = useNavigate();
     const [searchResults, setSearchResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [currentSearch, setCurrentSearch] = useState('');
 
     const handleSearch = async (searchIngredients) => {
         if(!searchIngredients.trim()) return;
 
         setIsLoading(true);
         setError(null);
+        setCurrentSearch(searchIngredients);
 
         try {
             const formattedIngredients = searchIngredients
@@ -23,17 +23,17 @@ function SearchRecipes() {
                 .map(i => i.trim())
                 .join(',');
 
-            const results = await searchRecipesByIngredients(formattedIngredients);
-            setSearchResults(results);
+            const data = await searchRecipesByIngredients(formattedIngredients, {
+                number: 100, // Fetch more results for pagination
+                offset: 0,
+            });
+
+            setSearchResults(data.results);
         } catch (err) {
             setError(`An error occurred: ${err.message}`);
         } finally {
             setIsLoading(false);
         }
-    };
-
-    const navigateToRecipe = (recipeId) => {
-        navigate(`/recipe/${recipeId}`);
     };
 
     return (
@@ -44,7 +44,7 @@ function SearchRecipes() {
                     Enter the ingredients you have at home, separated by commas, and find recipes you can make with them.
                 </p>
 
-                <SearchBar onSearch={handleSearch} />
+                <SearchBar onSearch={(ingredients) => handleSearch(ingredients, 1)}/>
             </div>
 
             {isLoading && <div className="loading">Loading recipes...</div>}
@@ -53,16 +53,10 @@ function SearchRecipes() {
 
             {!isLoading && !error && searchResults.length > 0 && (
                 <div className="results-container" aria-live="polite">
-                    <h3 className="results-title">Recipes found</h3>
-                    <div className="recipe-grid">
-                        {searchResults.map(recipe => (
-                            <RecipeCard
-                                key={recipe.id}
-                                recipe={recipe}
-                                onClick={navigateToRecipe}
-                            />
-                        ))}
-                    </div>
+                    <h3 className="results-title">Found {searchResults.length} recipes
+                        for &quot;{currentSearch}&quot;</h3>
+
+                    <RecipeList recipes={searchResults}/>
                 </div>
             )}
 

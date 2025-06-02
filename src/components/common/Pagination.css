@@ -1,0 +1,31 @@
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 2rem 0;
+}
+
+.page-item {
+    padding: 8px 16px;
+    border: 1px solid #e74c3c;
+    background: #fff;
+    color: #e74c3c;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+}
+
+.page-item.active,
+.page-item:hover:not(:disabled) {
+    background: #e74c3c;
+    color: #fff;
+}
+
+.page-item:disabled {
+    background: #f7f7f7;
+    color: #ccc;
+    cursor: not-allowed;
+    border-color: #eee;
+}

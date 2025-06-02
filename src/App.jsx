@@ -1,12 +1,11 @@
-import { Routes, Route } from 'react-router-dom'
-import { BrowserRouter as Router } from 'react-router-dom'
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import Header from './components/common/Header.jsx';
 import Home from './pages/Home.jsx';
 import Footer from "./components/common/Footer.jsx";
 import SearchRecipes from "./pages/SearchRecipes.jsx";
 import RecipeDetails from "./pages/RecipeDetails.jsx";
 import PopularRecipes from "./pages/PopularRecipes.jsx";
-import Favorites from "./pages/Favorites.jsx";
+import Favorites from "./pages/Favorites.tsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import {AuthProvider} from "./contexts/AuthContext.tsx";
