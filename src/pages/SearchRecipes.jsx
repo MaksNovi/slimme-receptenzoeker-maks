@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {searchRecipesByIngredients} from '../services/SpoonacularService';
 import {useSearch} from '../contexts/SearchContext.tsx';
 import SearchBar from "../components/common/SearchBar.tsx";
@@ -9,6 +9,7 @@ function SearchRecipes() {
     const {hasSearched, searchTerm, searchResults, updateSearch} = useSearch();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const hasRestoredSearch = useRef(false);
 
     const handleSearch = useCallback(async (searchIngredients) => {
         setIsLoading(true);
@@ -28,6 +29,8 @@ function SearchRecipes() {
             updateSearch(searchIngredients, data.results);
         } catch (err) {
             setError(`An error occurred: ${err.message}`);
+            // Update search results to empty if an error occurs to prevent infinite loop
+            updateSearch(searchIngredients, []);
         } finally {
             setIsLoading(false);
         }
@@ -35,10 +38,19 @@ function SearchRecipes() {
 
     // Restore search results if the search was performed before
     useEffect(() => {
-        if (hasSearched && searchTerm && searchResults.length === 0) {
-            handleSearch(searchTerm);
+        if (hasSearched && searchTerm && searchResults.length === 0 && !hasRestoredSearch.current) {
+            hasRestoredSearch.current = true;
+            handleSearch(searchTerm).catch(err => {
+                console.error('Error restoring search:', err);
+            });
         }
+
     }, [hasSearched, searchTerm, searchResults.length, handleSearch]);
+
+    // Ref to track if search has been restored
+    useEffect(() => {
+        hasRestoredSearch.current = false;
+    }, [searchTerm]);
 
     return (
         <div className="search-recipes-page">
