@@ -10,16 +10,18 @@ import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import {AuthProvider} from "./contexts/AuthContext.tsx";
 import './App.css'
+import {SearchContextProvider} from "./contexts/SearchContext.js";
 
 function App() {
 
   return (
       <AuthProvider>
-      <Router>
-          <div className="app-container">
-              <Header />
-              <main className="main-content">
-                  <Routes>
+          <SearchContextProvider>
+              <Router>
+                  <div className="app-container">
+                      <Header/>
+                      <main className="main-content">
+                          <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/search-results" element={<SearchRecipes />} />
                       <Route path="/recipe/:id" element={<RecipeDetails />} />
@@ -27,11 +29,12 @@ function App() {
                       <Route path="/favorites" element={<Favorites/>} />
                       <Route path="/login" element={<Login />} />
                       <Route path="/register" element={<Register />} />
-                  </Routes>
-              </main>
-              <Footer/>
-          </div>
-      </Router>
+                          </Routes>
+                      </main>
+                      <Footer/>
+                  </div>
+              </Router>
+          </SearchContextProvider>
       </AuthProvider>
   );
 }
