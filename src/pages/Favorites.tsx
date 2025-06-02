@@ -13,11 +13,11 @@ function Favorites() {
         }
     }, []);
 
-    const handleRemoveFavorite = (recipeId) => {
-        const updatedFavorites = favorites.filter(recipe => recipe.id !== recipeId);
+    const handleRemoveFavorite = (id: number) => {
+        const updatedFavorites = favorites.filter(recipe => recipe.id !== id);
         setFavorites(updatedFavorites);
         localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-    }
+    };
 
     return (
         <div className="favorites-page">
@@ -30,7 +30,11 @@ function Favorites() {
                 <div className="favorites-content">
                     <p className="favorites-count">You have {favorites.length} favorite
                         recipe{favorites.length !== 1 ? 's' : ''}</p>
-                    <RecipeList recipes={favorites}/>
+                    <RecipeList
+                        recipes={favorites}
+                        onRemoveFavorite={handleRemoveFavorite}
+                        showRemoveButton={true}
+                    />
                 </div>
             )}
         </div>

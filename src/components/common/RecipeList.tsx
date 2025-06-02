@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {useNavigate} from "react-router-dom";
 import RecipeCard from "./RecipeCard";
 import Pagination from "./Pagination";
 
@@ -14,10 +15,13 @@ interface RecipeListProps {
         readyInMinutes?: number;
         servings?: number;
     }>;
+    onRemoveFavorite?: (id: number) => void;
+    showRemoveButton?: boolean;
 }
 
-function RecipeList({recipes}: RecipeListProps) {
+function RecipeList({recipes, onRemoveFavorite, showRemoveButton = false}: RecipeListProps) {
     const [currentPage, setCurrentPage] = useState(1);
+    const navigate = useNavigate();
 
     const indexOfLastRecipe = currentPage * recipesPerPage;
     const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
@@ -25,10 +29,17 @@ function RecipeList({recipes}: RecipeListProps) {
 
     const totalPages = Math.ceil(recipes.length / recipesPerPage);
 
+    const handleRecipeClick = (id: number) => {
+        navigate(`/recipe/${id}`);
+    };
+
     const renderRecipeCard = (recipe: RecipeListProps['recipes'][0]) => (
         <RecipeCard
             key={recipe.id}
             recipe={recipe}
+            onClick={handleRecipeClick}
+            onRemoveFavorite={onRemoveFavorite}
+            showRemoveButton={showRemoveButton}
         />
     );
 
