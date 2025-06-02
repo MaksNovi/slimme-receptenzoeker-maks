@@ -13,6 +13,19 @@ function SearchBar({onSearch, placeholder = "Enter ingredients..."}) {
         }
     }, []);
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!event.target.closest('.search-bar-container')) {
+                setShowSuggestions(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
+
     const saveSearch = (search: string) => {
         if (!search.trim()) return;
 
