@@ -1,14 +1,25 @@
 import {useEffect, useState} from 'react';
 import {getPopularRecipes} from '../services/SpoonacularService';
-import RecipeList from "../components/common/RecipeList.js";
+import {useSearch} from "../contexts/SearchContext.js";
+import RecipeList from "../components/common/RecipeList.tsx";
 import './PopularRecipes.css';
 
 function PopularRecipes() {
+    const {setPreviousPage} = useSearch(); // Get the function to set the previous page for navigation
     const [popularRecipes, setPopularRecipes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        setPreviousPage('/popular-recipes'); // Set the previous page for navigation
+
+        const cachedRecipes = localStorage.getItem('popular-recipes');
+        if (cachedRecipes) {
+            setPopularRecipes(JSON.parse(cachedRecipes));
+            setIsLoading(false);
+            return;
+        }
+
         const fetchPopularRecipes = async () => {
             setIsLoading(true);
             setError(null);
@@ -16,6 +27,7 @@ function PopularRecipes() {
             try {
                 const data = await getPopularRecipes();
                 setPopularRecipes(data);
+                localStorage.setItem('popular-recipes', JSON.stringify(data));
             } catch (err) {
                 setError(`An error occurred: ${err.message}`);
                 console.error('Error fetching popular recipes:', err);
