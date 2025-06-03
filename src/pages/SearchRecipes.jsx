@@ -6,7 +6,7 @@ import RecipeList from "../components/common/RecipeList.jsx";
 import './SearchRecipes.css';
 
 function SearchRecipes() {
-    const {hasSearched, searchTerm, searchResults, updateSearch} = useSearch();
+    const {hasSearched, searchTerm, searchResults, updateSearch, currentPage} = useSearch();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const hasRestoredSearch = useRef(false);
@@ -52,6 +52,9 @@ function SearchRecipes() {
         hasRestoredSearch.current = false;
     }, [searchTerm]);
 
+    const recipesPerPage = 12;
+    const totalPages = Math.ceil(searchResults.length / recipesPerPage);
+
     return (
         <div className="search-recipes-page">
             <div className="search-container">
@@ -72,6 +75,8 @@ function SearchRecipes() {
                 <div className="results-container" aria-live="polite">
                     <h3 className="results-title">
                         Found {searchResults.length} recipe{searchResults.length > 1 ? 's' : ''} for &#34;{searchTerm}&#34;
+
+                        (Page {currentPage} of {totalPages})
                     </h3>
 
                     <RecipeList recipes={searchResults}/>

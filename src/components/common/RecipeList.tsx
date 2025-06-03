@@ -1,5 +1,5 @@
-import {useState} from 'react';
 import {useNavigate} from "react-router-dom";
+import {useSearch} from "../../contexts/SearchContext";
 import RecipeCard from "./RecipeCard";
 import Pagination from "./Pagination";
 
@@ -20,7 +20,7 @@ interface RecipeListProps {
 }
 
 function RecipeList({recipes, onRemoveFavorite, showRemoveButton = false}: RecipeListProps) {
-    const [currentPage, setCurrentPage] = useState(1);
+    const {currentPage, setCurrentPage} = useSearch();
     const navigate = useNavigate();
 
     const indexOfLastRecipe = currentPage * recipesPerPage;
@@ -31,6 +31,12 @@ function RecipeList({recipes, onRemoveFavorite, showRemoveButton = false}: Recip
 
     const handleRecipeClick = (id: number) => {
         navigate(`/recipe/${id}`);
+    };
+
+    //Update context instead of using the local state
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+        window.scrollTo({top: 0, behavior: 'smooth'});
     };
 
     const renderRecipeCard = (recipe: RecipeListProps['recipes'][0]) => (
@@ -53,7 +59,7 @@ function RecipeList({recipes, onRemoveFavorite, showRemoveButton = false}: Recip
                 <Pagination
                     totalPages={totalPages}
                     currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
+                    setCurrentPage={handlePageChange}
                 />
             )}
         </div>

@@ -22,6 +22,8 @@ interface SearchContextType {
     hasSearched: boolean;
     updateSearch: (term: string, results: any[]) => void;
     clearSearch: () => void;
+    currentPage: number;
+    setCurrentPage: (page: number) => void;
 }
 
 // Create the context
@@ -32,17 +34,20 @@ export const SearchContextProvider = ({children}: { children: ReactNode }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [hasSearched, setHasSearched] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const updateSearch = (term: string, results: any[]) => {
         setSearchTerm(term);
         setSearchResults(results);
         setHasSearched(true);
+        setCurrentPage(1); // Reset to the first page on new search
     };
 
     const clearSearch = () => {
         setSearchTerm('');
         setSearchResults([]);
         setHasSearched(false);
+        setCurrentPage(1); // Reset to the first page when clearing search
     };
 
     return (
@@ -51,7 +56,9 @@ export const SearchContextProvider = ({children}: { children: ReactNode }) => {
             searchResults,
             hasSearched,
             updateSearch,
-            clearSearch
+            clearSearch,
+            currentPage,
+            setCurrentPage
         }}>
             {children}
         </SearchProvider>
