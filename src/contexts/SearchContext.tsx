@@ -15,6 +15,14 @@ function createRequiredContext<T>() {
     return [context.Provider, useRequiredContext] as const;
 }
 
+// Define search filters
+interface SearchFilters {
+    cuisine: string;
+    diet: string[];
+    maxReadyTime: number;
+    type: string;
+}
+
 // Define the context type
 interface SearchContextType {
     searchTerm: string;
@@ -26,7 +34,16 @@ interface SearchContextType {
     setCurrentPage: (page: number) => void;
     previousPage: string;
     setPreviousPage: (page: string) => void;
+    filters?: SearchFilters; // Optional filters for search
+    updateFilters?: (newFilters: Partial<SearchFilters>) => void;
 }
+
+const defaultFilters: SearchFilters = {
+    cuisine: '',
+    diet: [],
+    maxReadyTime: 120,
+    type: ''
+};
 
 // Create the context
 const [SearchProvider, useSearch] = createRequiredContext<SearchContextType>();
@@ -38,12 +55,22 @@ export const SearchContextProvider = ({children}: { children: ReactNode }) => {
     const [hasSearched, setHasSearched] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [previousPage, setPreviousPage] = useState(''); // Track the previous page for navigation
+    const [filters, setFilters] = useState<SearchFilters>(defaultFilters);
+
+    const updateFilters = (newFilters: Partial<SearchFilters>) => {
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            ...newFilters
+        }));
+        setCurrentPage(1); // Reset to the first page when filters are updated
+    }
 
     const updateSearch = (term: string, results: any[]) => {
         setSearchTerm(term);
         setSearchResults(results);
         setHasSearched(true);
         setCurrentPage(1); // Reset to the first page on the new search
+        setFilters(defaultFilters);
     };
 
     const clearSearch = () => {
@@ -61,10 +88,12 @@ export const SearchContextProvider = ({children}: { children: ReactNode }) => {
             hasSearched,
             currentPage,
             previousPage,
+            filters,
             updateSearch,
             clearSearch,
             setCurrentPage,
-            setPreviousPage
+            setPreviousPage,
+            updateFilters
         }}>
             {children}
         </SearchProvider>
