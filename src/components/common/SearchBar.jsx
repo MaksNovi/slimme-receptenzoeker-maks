@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useSearch} from "../../contexts/SearchContext";
 import './SearchBar.css';
+import PropTypes from "prop-types";
 
 function SearchBar({onSearch, placeholder = "Enter ingredients..."}) {
     const {searchTerm: contextSearchTerm} = useSearch();
@@ -34,7 +35,7 @@ function SearchBar({onSearch, placeholder = "Enter ingredients..."}) {
         };
     }, []);
 
-    const saveSearch = (search: string) => {
+    const saveSearch = (search) => {
         if (!search.trim()) return;
 
         const updatedSearches = [search, ...recentSearches.filter(s => s !== search)].slice(0, 5);
@@ -87,5 +88,10 @@ function SearchBar({onSearch, placeholder = "Enter ingredients..."}) {
         </div>
     );
 }
+
+SearchBar.propTypes = {
+    onSearch: PropTypes.func.isRequired,
+    placeholder: PropTypes.string
+};
 
 export default SearchBar;

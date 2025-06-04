@@ -1,25 +1,12 @@
 import {useNavigate} from "react-router-dom";
 import {useSearch} from "../../contexts/SearchContext";
-import RecipeCard from "./RecipeCard";
+import RecipeCard from "./RecipeCard.jsx";
 import Pagination from "./Pagination";
+import PropTypes from 'prop-types';
 
 const recipesPerPage = 12;
 
-interface RecipeListProps {
-    recipes: Array<{
-        id: number;
-        image: string;
-        title: string;
-        usedIngredientCount: number;
-        missedIngredientCount: number;
-        readyInMinutes?: number;
-        servings?: number;
-    }>;
-    onRemoveFavorite?: (id: number) => void;
-    showRemoveButton?: boolean;
-}
-
-function RecipeList({recipes, onRemoveFavorite, showRemoveButton = false}: RecipeListProps) {
+function RecipeList({recipes, onRemoveFavorite, showRemoveButton = false}) {
     const {currentPage, setCurrentPage} = useSearch();
     const navigate = useNavigate();
 
@@ -29,17 +16,17 @@ function RecipeList({recipes, onRemoveFavorite, showRemoveButton = false}: Recip
 
     const totalPages = Math.ceil(recipes.length / recipesPerPage);
 
-    const handleRecipeClick = (id: number) => {
+    const handleRecipeClick = (id) => {
         navigate(`/recipe/${id}`);
     };
 
-    //Update context instead of using the local state
-    const handlePageChange = (page: number) => {
+    // Update context instead of using the local state
+    const handlePageChange = (page) => {
         setCurrentPage(page);
         window.scrollTo({top: 0, behavior: 'smooth'});
     };
 
-    const renderRecipeCard = (recipe: RecipeListProps['recipes'][0]) => (
+    const renderRecipeCard = (recipe) => (
         <RecipeCard
             key={recipe.id}
             recipe={recipe}
@@ -63,7 +50,22 @@ function RecipeList({recipes, onRemoveFavorite, showRemoveButton = false}: Recip
                 />
             )}
         </div>
-    )
+    );
 }
+
+// PropTypes for RecipeList component
+RecipeList.propTypes = {
+    recipes: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        image: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        usedIngredientCount: PropTypes.number.isRequired,
+        missedIngredientCount: PropTypes.number.isRequired,
+        readyInMinutes: PropTypes.number,
+        servings: PropTypes.number
+    })).isRequired,
+    onRemoveFavorite: PropTypes.func,
+    showRemoveButton: PropTypes.bool
+};
 
 export default RecipeList;
