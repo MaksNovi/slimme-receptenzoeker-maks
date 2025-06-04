@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import {useAuthContext} from '../contexts/AuthContext.tsx';
+import {useState} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+import {useAuthContext} from '../contexts/AuthContext.jsx';
 import useFormValidation from "../hooks/useFormValidation.jsx";
 import FormInput from "../components/common/FormInput.jsx";
 import './Login.css';

@@ -1,30 +1,15 @@
-import {useState} from 'react';
-import {useAuthContext} from "../../contexts/AuthContext";
 import {useNavigate} from "react-router-dom";
 import FavoriteButton from "./FavoriteButton";
-import MessageBox from "./MessageBox";
-import './RecipeCard.css';
 import PropTypes from 'prop-types';
+import './RecipeCard.css';
 
 const RecipeCard = ({recipe, onClick, onRemoveFavorite, showRemoveButton = false}) => {
-    const {isAuthenticated} = useAuthContext();
-    const [showError, setShowError] = useState(false);
     const navigate = useNavigate();
-
-    const handleFavoriteClick = (e) => {
-        e.stopPropagation();
-        if (!isAuthenticated) {
-            e.preventDefault();
-            setShowError(true);
-            return;
-        }
-    };
 
     const handleViewRecipeClick = () => {
         if (onClick) {
             onClick(recipe.id);
         } else {
-            // Default behavior: navigate to recipe details
             navigate(`/recipe/${recipe.id}`);
         }
     };
@@ -36,7 +21,7 @@ const RecipeCard = ({recipe, onClick, onRemoveFavorite, showRemoveButton = false
         }
     };
 
-    // Prepare the recipe object for FavoriteButton
+    // Prepare recipe object for FavoriteButton
     const favoriteButtonRecipe = {
         id: recipe.id,
         title: recipe.title,
@@ -56,22 +41,10 @@ const RecipeCard = ({recipe, onClick, onRemoveFavorite, showRemoveButton = false
                     className="recipe-image"
                 />
 
-                {/* Show FavoriteButton only when not in remove mode */}
                 {!showRemoveButton && (
                     <FavoriteButton
                         recipe={favoriteButtonRecipe}
                         className="card-favorite"
-                        onClick={handleFavoriteClick}
-                    />
-                )}
-
-                {/* Show the authentication error message */}
-                {showError && (
-                    <MessageBox
-                        message="Log in to add recipes to your favorites."
-                        type="error"
-                        onClose={() => setShowError(false)}
-                        positioned="absolute"
                     />
                 )}
             </div>
@@ -98,7 +71,6 @@ const RecipeCard = ({recipe, onClick, onRemoveFavorite, showRemoveButton = false
                     )}
                 </div>
 
-                {/* View recipe button - main action */}
                 <button
                     onClick={handleViewRecipeClick}
                     className="view-recipe-button"
@@ -107,7 +79,6 @@ const RecipeCard = ({recipe, onClick, onRemoveFavorite, showRemoveButton = false
                     View recipe
                 </button>
 
-                {/* Remove from the favorite button - only shown on the favorite page */}
                 {showRemoveButton && (
                     <button
                         onClick={handleRemoveFavoriteClick}
@@ -122,7 +93,6 @@ const RecipeCard = ({recipe, onClick, onRemoveFavorite, showRemoveButton = false
     );
 };
 
-// PropTypes for RecipeCard component
 RecipeCard.propTypes = {
     recipe: PropTypes.shape({
         id: PropTypes.number.isRequired,

@@ -1,7 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import {useSearch} from "../../contexts/SearchContext";
 import RecipeCard from "./RecipeCard.jsx";
-import Pagination from "./Pagination";
+import Pagination from "./Pagination.jsx";
 import PropTypes from 'prop-types';
 
 const recipesPerPage = 12;

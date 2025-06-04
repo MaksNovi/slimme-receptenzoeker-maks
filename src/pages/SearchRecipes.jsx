@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {searchRecipesByIngredients} from '../services/SpoonacularService';
-import {useSearch} from '../contexts/SearchContext.tsx';
-import SearchBar from "../components/common/SearchBar.tsx";
+import {useSearch} from '../contexts/SearchContext.jsx';
+import SearchBar from "../components/common/SearchBar.jsx";
 import RecipeList from "../components/common/RecipeList.jsx";
 import './SearchRecipes.css';
 

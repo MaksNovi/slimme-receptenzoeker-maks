@@ -1,8 +1,8 @@
 import {useNavigate, useParams} from 'react-router-dom';
 import {useEffect, useState} from "react";
 import {getRecipeDetails} from "../services/SpoonacularService.js";
-import {useSearch} from "../contexts/SearchContext.tsx";
-import FavoriteButton from "../components/common/FavoriteButton.tsx";
+import {useSearch} from "../contexts/SearchContext.jsx";
+import FavoriteButton from "../components/common/FavoriteButton.jsx";
 import './RecipeDetails.css';
 
 function RecipeDetails() {

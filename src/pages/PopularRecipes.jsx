@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {getPopularRecipes} from '../services/SpoonacularService';
-import {useSearch} from "../contexts/SearchContext.js";
-import RecipeList from "../components/common/RecipeList.tsx";
+import {useSearch} from "../contexts/SearchContext.jsx";
+import RecipeList from "../components/common/RecipeList.jsx";
 import './PopularRecipes.css';
 
 function PopularRecipes() {

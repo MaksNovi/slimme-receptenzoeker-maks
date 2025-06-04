@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import './Home.css';
-import {useAuthContext} from "../contexts/AuthContext.js";
+import {useAuthContext} from "../contexts/AuthContext.jsx";
 import mealImage1 from '../assets/mealImage1.jpg';
 import mealImage2 from '../assets/mealImage2.jpg';
 import mealImage3 from '../assets/mealImage3.jpg';
