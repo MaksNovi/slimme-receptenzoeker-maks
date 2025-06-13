@@ -1,18 +1,14 @@
 import {useEffect, useState} from 'react';
 import {getPopularRecipes} from '../services/SpoonacularService';
-import {useSearch} from "../contexts/SearchContext.jsx";
 import RecipeList from "../components/common/RecipeList.jsx";
 import './PopularRecipes.css';
 
 function PopularRecipes() {
-    const {setPreviousPage} = useSearch(); // Get the function to set the previous page for navigation
     const [popularRecipes, setPopularRecipes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        setPreviousPage('/popular-recipes'); // Set the previous page for navigation
-
         const cachedRecipes = localStorage.getItem('popular-recipes');
         if (cachedRecipes) {
             setPopularRecipes(JSON.parse(cachedRecipes));
