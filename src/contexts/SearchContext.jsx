@@ -1,4 +1,4 @@
-import {createContext, useContext, useState} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 
 // Utility function for the required context
@@ -19,9 +19,6 @@ function createRequiredContext() {
 // Define default filters
 const defaultFilters = {
     cuisine: '',
-    diet: [],
-    maxReadyTime: 120,
-    type: ''
 };
 
 // Create the context
@@ -60,6 +57,23 @@ export const SearchContextProvider = ({children}) => {
         setPreviousRoute('');
         setFilters(defaultFilters); // Reset filters when clearing search
     };
+
+    useEffect(() => {
+        const handleLogout = () => {
+            setSearchTerm('');
+            setSearchResults([]);
+            setHasSearched(false);
+            setCurrentPage(1);
+            setPreviousRoute('');
+            setFilters(defaultFilters);
+        };
+
+        window.addEventListener('userLogout', handleLogout);
+
+        return () => {
+            window.removeEventListener('userLogout', handleLogout);
+        };
+    }, []);
 
     return (
         <SearchProvider value={{

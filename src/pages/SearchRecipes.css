@@ -24,3 +24,62 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
 }
+
+.filter-controls {
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.filter-toggle-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.filter-toggle-btn:hover {
+    background: #c0392b;
+    transform: translateY(-1px);
+}
+
+.filter-toggle-btn.has-filters {
+    background: #27ae60;
+}
+
+.filter-toggle-btn.has-filters:hover {
+    background: #219a52;
+}
+
+.filter-indicator {
+    color: #ffd700;
+    font-size: 1.2rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.filter-panel {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin: 1rem 0;
+    border: 1px solid #e9ecef;
+}
