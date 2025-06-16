@@ -3,7 +3,7 @@ import {useSearch} from '../contexts/SearchContext';
 import {searchRecipesByIngredients} from '../services/SpoonacularService';
 import SearchBar from '../components/common/SearchBar';
 import RecipeList from '../components/common/RecipeList';
-import CuisineFilter from '../components/filters/CuisineFilter';
+import FilterPanel from "../components/filters/FilterPanel.jsx";
 import './SearchRecipes.css';
 
 function SearchRecipes() {
@@ -23,7 +23,6 @@ function SearchRecipes() {
 
     // // Refs to keep state between renders without triggering a new render
     const isMounted = useRef(false); // Tracks whether the component has passed its first render
-    const lastAppliedFilter = useRef(filters.cuisine); // Stores the last applied filter value
 
     /**
      * Central function to perform searches.
@@ -54,8 +53,6 @@ function SearchRecipes() {
      * Callback function to handle search input from the SearchBar component.
      */
     const handleSearch = useCallback(async (newSearchTerm) => {
-        // Reset the last applied filter when a new search is initiated
-        lastAppliedFilter.current = filters.cuisine;
         await performSearch(newSearchTerm, filters);
     }, [performSearch, filters]);
 
@@ -63,15 +60,14 @@ function SearchRecipes() {
      * Effect to handle changes in filters and search term.
      */
     useEffect(() => {
-        // Declare the effect as a function to avoid unnecessary re-renders
+        // Prevent running on the very first render
         if (!isMounted.current) {
             isMounted.current = true;
             return;
         }
 
-        // If the search term is empty, do not perform a search
-        if (searchTerm && filters.cuisine !== lastAppliedFilter.current) {
-            lastAppliedFilter.current = filters.cuisine; // Update the ref with the current filter value
+        // Only perform a search if a term has been entered
+        if (searchTerm) {
             performSearch(searchTerm, filters);
         }
     }, [filters, searchTerm, performSearch]); // Listens to changes in filters and searchTerm
@@ -99,11 +95,7 @@ function SearchRecipes() {
                     </button>
                 </div>
 
-                {showFilters && (
-                    <div className="filter-panel">
-                        <CuisineFilter/>
-                    </div>
-                )}
+                {showFilters && <FilterPanel/>}
             </div>
 
             <div className="results-feedback">
@@ -122,7 +114,7 @@ function SearchRecipes() {
 
                 {!isLoading && !error && hasSearched && searchResults.length === 0 && (
                     <div className="no-results">
-                        <p>No recipes found &#34;{searchTerm}&#34;. Try other ingredients.</p>
+                        <p>No recipes found &#34;{searchTerm}&#34;. Try other ingredients or adjust the filters.</p>
                     </div>
                 )}
             </div>

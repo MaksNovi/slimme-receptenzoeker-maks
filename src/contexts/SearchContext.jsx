@@ -1,20 +1,14 @@
-import {createContext, useContext, useEffect, useState} from 'react';
+import {createContext, useCallback, useContext, useEffect, useMemo, useState} from 'react';
 import PropTypes from 'prop-types';
 
-// Utility function for the required context
-function createRequiredContext() {
-    const context = createContext(undefined);
-
-    const useRequiredContext = () => {
-        const value = useContext(context);
-        if (value === undefined) {
-            throw new Error('Context must be used within its Provider');
-        }
-        return value;
-    };
-
-    return [context.Provider, useRequiredContext];
-}
+const context = createContext(undefined);
+export const useSearch = () => {
+    const value = useContext(context);
+    if (value === undefined) {
+        throw new Error('useSearch must be used within a SearchContextProvider');
+    }
+    return value;
+};
 
 // Define default filters
 const defaultFilters = {
@@ -23,9 +17,6 @@ const defaultFilters = {
     maxReadyTime: '',
     type: ''
 };
-
-// Create the context
-const [SearchProvider, useSearch] = createRequiredContext();
 
 // Export the provider component
 export const SearchContextProvider = ({children}) => {
@@ -36,30 +27,28 @@ export const SearchContextProvider = ({children}) => {
     const [previousRoute, setPreviousRoute] = useState(''); // Renamed for clarity
     const [filters, setFilters] = useState(defaultFilters);
 
-    const updateFilters = (newFilters) => {
+    const updateFilters = useCallback((newFilters) => {
         setFilters(prevFilters => ({
             ...prevFilters,
             ...newFilters
         }));
         setCurrentPage(1); // Reset to the first page when filters are updated
-    };
+    }, []);
 
-    const updateSearch = (term, results) => {
+    const updateSearch = useCallback((term, results) => {
         setSearchTerm(term);
         setSearchResults(results);
         setHasSearched(true);
         setCurrentPage(1); // Reset to the first page on the new search
-        // Don't reset filters on new search - keep user's filter preferences
-    };
+    }, []); // Empty dependency array for stability.
 
-    const clearSearch = () => {
+    const clearSearch = useCallback(() => {
         setSearchTerm('');
         setSearchResults([]);
         setHasSearched(false);
         setCurrentPage(1);
-        setPreviousRoute('');
         setFilters(defaultFilters); // Reset filters when clearing search
-    };
+    }, []);
 
     useEffect(() => {
         const handleLogout = () => {
@@ -78,28 +67,34 @@ export const SearchContextProvider = ({children}) => {
         };
     }, []);
 
-    return (
-        <SearchProvider value={{
-            searchTerm,
-            searchResults,
-            hasSearched,
-            currentPage,
-            previousRoute,
-            filters,
-            updateSearch,
-            clearSearch,
-            setCurrentPage,
-            setPreviousRoute,
-            updateFilters
-        }}>
-            {children}
-        </SearchProvider>
-    );
+    // useMemo will only re-create the context value object when one of its dependencies changes.
+    const value = useMemo(() => ({
+        searchTerm,
+        searchResults,
+        hasSearched,
+        currentPage,
+        filters,
+        updateSearch,
+        clearSearch,
+        setCurrentPage,
+        previousRoute,
+        updateFilters
+    }), [
+        searchTerm,
+        searchResults,
+        hasSearched,
+        currentPage,
+        filters,
+        updateSearch,
+        clearSearch,
+        setPreviousRoute,
+        updateFilters
+    ]);
+
+    return <context.Provider value={value}>{children}</context.Provider>;
 };
 
 // PropTypes for validation
 SearchContextProvider.propTypes = {
     children: PropTypes.node.isRequired
 };
-
-export {useSearch};
