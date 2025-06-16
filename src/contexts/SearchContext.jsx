@@ -78,15 +78,18 @@ export const SearchContextProvider = ({children}) => {
         clearSearch,
         setCurrentPage,
         previousRoute,
+        setPreviousRoute,
         updateFilters
     }), [
         searchTerm,
         searchResults,
         hasSearched,
         currentPage,
+        setCurrentPage,
         filters,
         updateSearch,
         clearSearch,
+        previousRoute,
         setPreviousRoute,
         updateFilters
     ]);
