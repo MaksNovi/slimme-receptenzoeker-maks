@@ -25,9 +25,18 @@ export const searchRecipesByIngredients = async (ingredients, options = {}) => {
             return {results: [], totalResults: 0};
         }
 
-        // Add the cuisine filter if provided
+        // Dynamically add all provided filters to the request
         if (options.cuisine) {
             params.append('cuisine', options.cuisine);
+        }
+        if (options.diet) {
+            params.append('diet', options.diet);
+        }
+        if (options.maxReadyTime) {
+            params.append('maxReadyTime', options.maxReadyTime);
+        }
+        if (options.type) {
+            params.append('type', options.type);
         }
 
         const url = `${BASE_URL}/recipes/complexSearch?${params.toString()}`;
