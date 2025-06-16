@@ -19,6 +19,9 @@ function createRequiredContext() {
 // Define default filters
 const defaultFilters = {
     cuisine: '',
+    diet: '',
+    maxReadyTime: '',
+    type: ''
 };
 
 // Create the context
