@@ -12,7 +12,7 @@ function RecipeDetails() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const {
-        hasSearched, previousRoute
+        hasSearched, previousRoute, previousPage, setCurrentPage
     } = useSearch();
 
     useEffect(() => {
@@ -59,6 +59,7 @@ function RecipeDetails() {
 
     const handleBackClick = () => {
         if (previousRoute) {
+            setCurrentPage(previousPage);
             navigate(previousRoute);
         } else if (hasSearched) {
             navigate('/search-results');

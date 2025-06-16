@@ -8,7 +8,7 @@ const recipesPerPage = 12;
 
 function RecipeList({recipes, onRemoveFavorite, showRemoveButton = false}) {
     const {
-        currentPage, setCurrentPage, setPreviousRoute
+        currentPage, setCurrentPage, setPreviousRoute, setPreviousPage
     } = useSearch();
     const navigate = useNavigate();
     const location = useLocation();
@@ -21,6 +21,7 @@ function RecipeList({recipes, onRemoveFavorite, showRemoveButton = false}) {
 
     const handleRecipeClick = (id) => {
         setPreviousRoute(location.pathname + location.search); // Update previous route in context
+        setPreviousPage(currentPage);
         navigate(`/recipe/${id}`);
     };
 

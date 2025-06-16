@@ -25,6 +25,7 @@ export const SearchContextProvider = ({children}) => {
     const [hasSearched, setHasSearched] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [previousRoute, setPreviousRoute] = useState(''); // Renamed for clarity
+    const [previousPage, setPreviousPage] = useState(1); // Added for tracking previous page
     const [filters, setFilters] = useState(defaultFilters);
 
     const updateFilters = useCallback((newFilters) => {
@@ -57,6 +58,7 @@ export const SearchContextProvider = ({children}) => {
             setHasSearched(false);
             setCurrentPage(1);
             setPreviousRoute('');
+            setPreviousPage(1);
             setFilters(defaultFilters);
         };
 
@@ -79,6 +81,8 @@ export const SearchContextProvider = ({children}) => {
         setCurrentPage,
         previousRoute,
         setPreviousRoute,
+        previousPage,
+        setPreviousPage,
         updateFilters
     }), [
         searchTerm,
@@ -91,6 +95,8 @@ export const SearchContextProvider = ({children}) => {
         clearSearch,
         previousRoute,
         setPreviousRoute,
+        previousPage,
+        setPreviousPage,
         updateFilters
     ]);
 
