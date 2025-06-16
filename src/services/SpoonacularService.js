@@ -1,101 +1,103 @@
-const API_KEY = '9da7c25f2fb947788fdc3b3c5101196e';
+const API_KEY = '7f951807316d4fa5b643073d5a8dcc7f';
 const BASE_URL = 'https://api.spoonacular.com';
 
 export const searchRecipesByIngredients = async (ingredients, options = {}) => {
     try {
-        const {
-            number = 100,
-            offset = 0,
-            addRecipeInformation = true,
-            fillIngredients = true,
-            cuisine
-        } = options;
+        const params = new URLSearchParams({
+            apiKey: API_KEY,
+            number: options.number || 100,
+            offset: options.offset || 0,
+            addRecipeInformation: true,
+            fillIngredients: true,
+            ranking: 1,
+        });
 
-        // use complexSearch endpoint for consistency
-        let url = `${BASE_URL}/recipes/complexSearch?apiKey=${API_KEY}`;
-
-        // Clean and format ingredients properly
         const cleanedIngredients = ingredients
             .split(',')
             .map(ingredient => ingredient.trim())
-            .filter(ingredient => ingredient.length > 0)
+            .filter(Boolean)
             .join(',');
 
-        console.log('🔍 Cleaned ingredients:', cleanedIngredients);
-
-        //  Use includeIngredients parameter for ingredient-based search
-        url += `&includeIngredients=${encodeURIComponent(cleanedIngredients)}`;
-        url += `&number=${number}`;
-        url += `&offset=${offset}`;
-        url += `&addRecipeInformation=${addRecipeInformation}`;
-        url += `&fillIngredients=${fillIngredients}`;
-
-        // Add ranking for better ingredient matching
-        url += `&ranking=1`; // Maximize used ingredients
-
-        // Add cuisine filter when provided
-        if (cuisine) {
-            url += `&cuisine=${encodeURIComponent(cuisine)}`;
+        if (cleanedIngredients) {
+            params.append('includeIngredients', cleanedIngredients);
+        } else {
+            // Don't perform a search if no ingredients are provided
+            return {results: [], totalResults: 0};
         }
 
-        console.log('🔍 Final API URL:', url);
+        // Add the cuisine filter if provided
+        if (options.cuisine) {
+            params.append('cuisine', options.cuisine);
+        }
+
+        const url = `${BASE_URL}/recipes/complexSearch?${params.toString()}`;
 
         const response = await fetch(url);
 
         if (!response.ok) {
             if (response.status === 402) {
-                throw new Error('API quota exceeded. Please check your Spoonacular account.');
+                throw new Error('apiKey is invalid or has exceeded its usage limit. Please check your API key.');
             }
-            throw new Error(`API responded with status: ${response.status}`);
+            // Throw a more generic error for other status codes
+            throw new Error(`API-error with status: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log(' API Response:', data);
 
+        // Return the results and totalResults, ensuring they are defined
         return {
             results: data.results || [],
             totalResults: data.totalResults || 0,
-            hasMoreResults: (offset + number) < (data.totalResults || 0)
         };
     } catch (error) {
-        console.error('Error searching recipes:', error);
+        console.error('Error when retrieving recipes:', error);
         throw error;
     }
 };
 
 export const getRecipeDetails = async (recipeId) => {
     try {
-        const url = `${BASE_URL}/recipes/${recipeId}/information?apiKey=${API_KEY}&includeNutrition=true`;
+        const params = new URLSearchParams({
+            apiKey: API_KEY,
+            includeNutrition: true,
+        });
 
+        const url = `${BASE_URL}/recipes/${recipeId}/information?${params.toString()}`;
         const response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error(`API responded with status: ${response.status}`);
+            throw new Error(`API-error with status: ${response.status}`);
         }
 
         return await response.json();
     } catch (error) {
-        console.error('Error fetching recipe details:', error);
+        console.error('Error when retrieving recipe details:', error);
         throw error;
     }
 };
 
 export const getPopularRecipes = async (options = {}) => {
     try {
-        const { number = 12, tags = '' } = options;
+        const params = new URLSearchParams({
+            apiKey: API_KEY,
+            number: options.number || 12,
+        });
 
-        const url = `${BASE_URL}/recipes/random?apiKey=${API_KEY}&number=${number}&tags=${tags}`;
+        if (options.tags) {
+            params.append('tags', options.tags);
+        }
 
+        const url = `${BASE_URL}/recipes/random?${params.toString()}`;
         const response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error(`API responded with status: ${response.status}`);
+            throw new Error(`API-error with status: ${response.status}`);
         }
 
         const data = await response.json();
-        return data.recipes;
+        return data.recipes || [];
     } catch (error) {
-        console.error('Error fetching popular recipes:', error);
+        console.error('Error with retrieving popular recipes:', error);
         throw error;
     }
 };
