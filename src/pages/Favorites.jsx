@@ -13,7 +13,7 @@ function Favorites() {
         }
     }, []);
 
-    const handleRemoveFavorite = (id: number) => {
+    const handleRemoveFavorite = (id) => {
         const updatedFavorites = favorites.filter(recipe => recipe.id !== id);
         setFavorites(updatedFavorites);
         localStorage.setItem("favorites", JSON.stringify(updatedFavorites));

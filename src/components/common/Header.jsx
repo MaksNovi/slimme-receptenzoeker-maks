@@ -1,5 +1,5 @@
 import {Link, useNavigate} from 'react-router-dom';
-import {useAuthContext} from "../../contexts/AuthContext.tsx";
+import {useAuthContext} from "../../contexts/AuthContext.jsx";
 import './Header.css';
 import logo from '../../assets/food-researcher-logo.svg'
 

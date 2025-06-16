@@ -1,45 +1,10 @@
-import {useState} from 'react';
-import {useAuthContext} from "../../contexts/AuthContext.js";
 import {useNavigate} from "react-router-dom";
-import FavoriteButton from "./FavoriteButton.js";
-import MessageBox from "./MessageBox";
+import FavoriteButton from "./FavoriteButton";
+import PropTypes from 'prop-types';
 import './RecipeCard.css';
 
-interface Recipe {
-    id: number;
-    image: string;
-    title: string;
-    usedIngredientCount: number;
-    missedIngredientCount: number;
-    readyInMinutes?: number;
-    servings?: number;
-}
-
-interface RecipeCardProps {
-    recipe: Recipe;
-    onClick?: (id: number) => void;
-    onRemoveFavorite?: (id: number) => void;
-    showRemoveButton?: boolean;
-}
-
-const RecipeCard: React.FC<RecipeCardProps> = ({
-                                                   recipe,
-                                                   onClick,
-                                                   onRemoveFavorite,
-                                                   showRemoveButton = false
-                                               }) => {
-    const {isAuthenticated} = useAuthContext();
-    const [showError, setShowError] = useState(false);
+const RecipeCard = ({recipe, onClick, onRemoveFavorite, showRemoveButton = false}) => {
     const navigate = useNavigate();
-
-    const handleFavoriteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.stopPropagation();
-        if (!isAuthenticated) {
-            e.preventDefault();
-            setShowError(true);
-            return;
-        }
-    };
 
     const handleViewRecipeClick = () => {
         if (onClick) {
@@ -49,13 +14,14 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
         }
     };
 
-    const handleRemoveFavoriteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleRemoveFavoriteClick = (e) => {
         e.stopPropagation();
         if (onRemoveFavorite) {
             onRemoveFavorite(recipe.id);
         }
-    }
+    };
 
+    // Prepare recipe object for FavoriteButton
     const favoriteButtonRecipe = {
         id: recipe.id,
         title: recipe.title,
@@ -79,21 +45,13 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
                     <FavoriteButton
                         recipe={favoriteButtonRecipe}
                         className="card-favorite"
-                        onClick={handleFavoriteClick}
-                    />
-                )}
-
-                {showError && (
-                    <MessageBox
-                        message={"Log in to add recipes to your favorites."}
-                        onClose={() => setShowError(false)}
-                        positioned="absolute"
                     />
                 )}
             </div>
 
             <div className="recipe-info">
                 <h3 className="recipe-title">{recipe.title}</h3>
+
                 <div className="recipe-stats">
                     <div className="stat">
                         <span className="stat-label">Used ingredients:</span>
@@ -114,8 +72,9 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
                 </div>
 
                 <button
-                    onClick={() => onClick(recipe.id)}
+                    onClick={handleViewRecipeClick}
                     className="view-recipe-button"
+                    type="button"
                 >
                     View recipe
                 </button>
@@ -124,6 +83,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
                     <button
                         onClick={handleRemoveFavoriteClick}
                         className="remove-favorite-text-button"
+                        type="button"
                     >
                         Remove from favorites
                     </button>
@@ -131,6 +91,21 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
             </div>
         </div>
     );
-}
+};
+
+RecipeCard.propTypes = {
+    recipe: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        image: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        usedIngredientCount: PropTypes.number.isRequired,
+        missedIngredientCount: PropTypes.number.isRequired,
+        readyInMinutes: PropTypes.number,
+        servings: PropTypes.number
+    }).isRequired,
+    onClick: PropTypes.func,
+    onRemoveFavorite: PropTypes.func,
+    showRemoveButton: PropTypes.bool
+};
 
 export default RecipeCard;

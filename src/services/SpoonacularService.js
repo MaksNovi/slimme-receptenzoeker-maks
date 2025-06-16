@@ -1,64 +1,112 @@
-const API_KEY = '990f11f392dd4965a2863739f4ce2f1b';
+const API_KEY = 'b4a18836850d4ed78156e00dc5c60dea';
 const BASE_URL = 'https://api.spoonacular.com';
 
 export const searchRecipesByIngredients = async (ingredients, options = {}) => {
     try {
-        const { ignorePantry = true, number = 12, ranking = 1 } = options;
+        const params = new URLSearchParams({
+            apiKey: API_KEY,
+            number: options.number || 100,
+            offset: options.offset || 0,
+            addRecipeInformation: true,
+            fillIngredients: true,
+            ranking: 1,
+        });
 
-        const url = `${BASE_URL}/recipes/findByIngredients?apiKey=${API_KEY}&ingredients=${ingredients}&number=${number}&ranking=${ranking}&ignorePantry=${ignorePantry}`;
+        const cleanedIngredients = ingredients
+            .split(',')
+            .map(ingredient => ingredient.trim())
+            .filter(Boolean)
+            .join(',');
+
+        if (cleanedIngredients) {
+            params.append('includeIngredients', cleanedIngredients);
+        } else {
+            // Don't perform a search if no ingredients are provided
+            return {results: [], totalResults: 0};
+        }
+
+        // Dynamically add all provided filters to the request
+        if (options.cuisine) {
+            params.append('cuisine', options.cuisine);
+        }
+        if (options.diet) {
+            params.append('diet', options.diet);
+        }
+        if (options.maxReadyTime) {
+            params.append('maxReadyTime', options.maxReadyTime);
+        }
+        if (options.type) {
+            params.append('type', options.type);
+        }
+
+        const url = `${BASE_URL}/recipes/complexSearch?${params.toString()}`;
 
         const response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error(`API responded with status: ${response.status}`);
+            if (response.status === 402) {
+                throw new Error('apiKey is invalid or has exceeded its usage limit. Please check your API key.');
+            }
+            // Throw a more generic error for other status codes
+            throw new Error(`API-error with status: ${response.status}`);
         }
 
-        const results = await response.json();
+        const data = await response.json();
 
+        // Return the results and totalResults, ensuring they are defined
         return {
-            results,
-            totalResults: results.length,
-            hasMoreResults: results.length === number
+            results: data.results || [],
+            totalResults: data.totalResults || 0,
         };
     } catch (error) {
-        console.error('Error searching recipes by ingredients:', error);
+        console.error('Error when retrieving recipes:', error);
         throw error;
     }
 };
 
 export const getRecipeDetails = async (recipeId) => {
     try {
-        const url = `${BASE_URL}/recipes/${recipeId}/information?apiKey=${API_KEY}&includeNutrition=true`;
+        const params = new URLSearchParams({
+            apiKey: API_KEY,
+            includeNutrition: true,
+        });
 
+        const url = `${BASE_URL}/recipes/${recipeId}/information?${params.toString()}`;
         const response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error(`API responded with status: ${response.status}`);
+            throw new Error(`API-error with status: ${response.status}`);
         }
 
         return await response.json();
     } catch (error) {
-        console.error('Error fetching recipe details:', error);
+        console.error('Error when retrieving recipe details:', error);
         throw error;
     }
 };
 
 export const getPopularRecipes = async (options = {}) => {
     try {
-        const { number = 12, tags = '' } = options;
+        const params = new URLSearchParams({
+            apiKey: API_KEY,
+            number: options.number || 12,
+        });
 
-        const url = `${BASE_URL}/recipes/random?apiKey=${API_KEY}&number=${number}&tags=${tags}`;
+        if (options.tags) {
+            params.append('tags', options.tags);
+        }
 
+        const url = `${BASE_URL}/recipes/random?${params.toString()}`;
         const response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error(`API responded with status: ${response.status}`);
+            throw new Error(`API-error with status: ${response.status}`);
         }
 
         const data = await response.json();
-        return data.recipes;
+        return data.recipes || [];
     } catch (error) {
-        console.error('Error fetching popular recipes:', error);
+        console.error('Error with retrieving popular recipes:', error);
         throw error;
     }
 };

@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {getPopularRecipes} from '../services/SpoonacularService';
-import RecipeList from "../components/common/RecipeList.js";
+import RecipeList from "../components/common/RecipeList.jsx";
 import './PopularRecipes.css';
 
 function PopularRecipes() {
@@ -9,6 +9,13 @@ function PopularRecipes() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        const cachedRecipes = localStorage.getItem('popular-recipes');
+        if (cachedRecipes) {
+            setPopularRecipes(JSON.parse(cachedRecipes));
+            setIsLoading(false);
+            return;
+        }
+
         const fetchPopularRecipes = async () => {
             setIsLoading(true);
             setError(null);
@@ -16,6 +23,7 @@ function PopularRecipes() {
             try {
                 const data = await getPopularRecipes();
                 setPopularRecipes(data);
+                localStorage.setItem('popular-recipes', JSON.stringify(data));
             } catch (err) {
                 setError(`An error occurred: ${err.message}`);
                 console.error('Error fetching popular recipes:', err);

@@ -1,7 +1,8 @@
 import {useNavigate, useParams} from 'react-router-dom';
 import {useEffect, useState} from "react";
 import {getRecipeDetails} from "../services/SpoonacularService.js";
-import FavoriteButton from "../components/common/FavoriteButton.tsx";
+import {useSearch} from "../contexts/SearchContext.jsx";
+import FavoriteButton from "../components/common/FavoriteButton.jsx";
 import './RecipeDetails.css';
 
 function RecipeDetails() {
@@ -10,6 +11,9 @@ function RecipeDetails() {
     const [recipe, setRecipe] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const {
+        hasSearched, previousRoute, previousPage, setCurrentPage
+    } = useSearch();
 
     useEffect(() => {
         const fetchRecipeDetails = async () => {
@@ -53,6 +57,17 @@ function RecipeDetails() {
         return null;
     }
 
+    const handleBackClick = () => {
+        if (previousRoute) {
+            setCurrentPage(previousPage);
+            navigate(previousRoute);
+        } else if (hasSearched) {
+            navigate('/search-results');
+        } else {
+            navigate(-1);
+        }
+    }
+
     return (
         <div className="recipe-details-page">
             <div className="recipe-details-flex">
@@ -77,7 +92,7 @@ function RecipeDetails() {
                                 showText={true}
                             />
                         </div>
-                        <button className="back-btn" onClick={() => navigate(-1)}>Back to Search</button>
+                        <button className="back-btn" onClick={handleBackClick}>Back to Search</button>
                     </div>
 
                     <div>

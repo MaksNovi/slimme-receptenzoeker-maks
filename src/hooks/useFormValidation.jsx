@@ -92,11 +92,11 @@ const useFormValidation = (initialValue, validationRules) => {
         values,
         errors,
         touched,
+        setValues,
+        setErrors,
         handleChange,
         handleBlur,
-        validateForm,
-        setValues,
-        setErrors
+        validateForm
     };
 };
 
