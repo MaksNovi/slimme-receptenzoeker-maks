@@ -1,4 +1,4 @@
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useSearch} from "../../contexts/SearchContext";
 import RecipeCard from "./RecipeCard.jsx";
 import Pagination from "./Pagination.jsx";
@@ -7,8 +7,11 @@ import PropTypes from 'prop-types';
 const recipesPerPage = 12;
 
 function RecipeList({recipes, onRemoveFavorite, showRemoveButton = false}) {
-    const {currentPage, setCurrentPage} = useSearch();
+    const {
+        currentPage, setCurrentPage, setPreviousRoute
+    } = useSearch();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const indexOfLastRecipe = currentPage * recipesPerPage;
     const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
@@ -17,6 +20,7 @@ function RecipeList({recipes, onRemoveFavorite, showRemoveButton = false}) {
     const totalPages = Math.ceil(recipes.length / recipesPerPage);
 
     const handleRecipeClick = (id) => {
+        setPreviousRoute(location.pathname + location.search); // Update previous route in context
         navigate(`/recipe/${id}`);
     };
 

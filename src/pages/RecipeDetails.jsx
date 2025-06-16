@@ -11,7 +11,9 @@ function RecipeDetails() {
     const [recipe, setRecipe] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const {hasSearched} = useSearch();
+    const {
+        hasSearched, previousRoute
+    } = useSearch();
 
     useEffect(() => {
         const fetchRecipeDetails = async () => {
@@ -56,7 +58,9 @@ function RecipeDetails() {
     }
 
     const handleBackClick = () => {
-        if (hasSearched) {
+        if (previousRoute) {
+            navigate(previousRoute);
+        } else if (hasSearched) {
             navigate('/search-results');
         } else {
             navigate(-1);
