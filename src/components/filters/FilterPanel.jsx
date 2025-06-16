@@ -1,5 +1,7 @@
 import {useSearch} from '../../contexts/SearchContext';
 import SelectFilter from './SelectFilter';
+import InputFilter from "./InputFilter.jsx";
+import './FilterStyles.css'
 
 // Define options for the filters
 const cuisineOptions = [
@@ -42,6 +44,7 @@ function FilterPanel() {
                 options={cuisineOptions}
                 placeholder="All Cuisines"
             />
+
             <SelectFilter
                 label="Diet"
                 name="diet"
@@ -50,6 +53,7 @@ function FilterPanel() {
                 options={dietOptions}
                 placeholder="All Diets"
             />
+
             <SelectFilter
                 label="Meal Type"
                 name="type"
@@ -57,6 +61,15 @@ function FilterPanel() {
                 onChange={handleFilterChange}
                 options={mealTypeOptions}
                 placeholder="All Types"
+            />
+
+            <InputFilter
+                label="Max. Prep Time (min)"
+                name="maxReadyTime"
+                type="number"
+                value={filters.maxReadyTime}
+                onChange={handleFilterChange}
+                placeholder="e.g., 30"
             />
         </div>
     );
